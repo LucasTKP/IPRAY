@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "194906957335",
+    "project_id": "ipray-c9f90",
+    "storage_bucket": "ipray-c9f90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194906957335:android:f2d23a31a152025b785e52",
+        "android_client_info": {
+          "package_name": "com.example.ipray"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194906957335-nmifjanta8ciiaekj57poq5b9f1h1ilt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8LWp23v5KJyxKXJdIupvJS8vB7nvel_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "194906957335-nmifjanta8ciiaekj57poq5b9f1h1ilt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "194906957335-7kdrbppgu927kbb3gvmnjfojkhtebo1n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lucas.ipray"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194906957335:android:d94a5a94875b3783785e52",
+        "android_client_info": {
+          "package_name": "com.lucas.ipray"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194906957335-jocmoeoa742skk95og0jmugvk2r9f31s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucas.ipray",
+            "certificate_hash": "9aae92115d2c7a3778656cc313fe6c11f6940030"
+          }
+        },
+        {
+          "client_id": "194906957335-nmifjanta8ciiaekj57poq5b9f1h1ilt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8LWp23v5KJyxKXJdIupvJS8vB7nvel_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "194906957335-nmifjanta8ciiaekj57poq5b9f1h1ilt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "194906957335-7kdrbppgu927kbb3gvmnjfojkhtebo1n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lucas.ipray"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
