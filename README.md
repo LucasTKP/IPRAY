@@ -7,7 +7,10 @@ Projeto em desenvolvimento...
 <div align="center">
   
 
-https://github.com/LucasTKP/TheMovieApp/assets/101598532/080add33-b6a7-4e88-974a-8ab7dd093387
+
+
+https://github.com/LucasTKP/ipray/assets/101598532/03c10d57-04d7-48c5-af73-05719ad7c073
+
 
 
 </div>
