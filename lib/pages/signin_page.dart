@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ipray/components/loading_user_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
-import 'package:ipray/service/dio_service_imp.dart';
-import 'package:ipray/service/sington_service.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -13,8 +12,6 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final UserController _controller = UserController(DioServiceImp());
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -76,78 +73,81 @@ class _SignInPageState extends State<SignInPage> {
                     const SizedBox(
                       height: 40,
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _controller.isLoading.value = true;
-                        onError(String error) {
-                          final snackBar = SnackBar(
-                            content: Text(error),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-
-                        _controller.signInWithGoogle(onError).then((result) {
-                          if (result != null) {
-                            final email = result.user?.email ?? "";
-                            _controller.getUser(email).then((response) {
-                              _controller.isLoading.value = false;
-                              if (response != null) {
-                                if (response.id != 0) {
-                                  SingtonService().user = response;
-                                  Navigator.pushReplacementNamed(
-                                      context, '/home');
-                                } else {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/signup');
-                                }
-                              }
-                            });
+                    Consumer<UserController>(builder: (_, controller, child) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          controller.setIsLoading(true);
+                          onError(String error) {
+                            final snackBar = SnackBar(
+                              content: Text(error),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           }
-                          _controller.isLoading.value = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: const BorderSide(
-                            color: Color(0xFFE5B500),
-                            width: 3,
+
+                          controller.signInWithGoogle(onError).then((result) {
+                            if (result != null) {
+                              final email = result.user?.email ?? "";
+                              controller.getUser(email).then((response) {
+                                controller.setIsLoading(false);
+
+                                if (response != null) {
+                                  if (response.id != 0) {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/home');
+                                  } else {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/signup');
+                                  }
+                                }
+                              });
+                            }
+                            controller.setIsLoading(false);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: const BorderSide(
+                              color: Color(0xFFE5B500),
+                              width: 3,
+                            ),
+                          ),
+                          backgroundColor: const Color(0xFFFDF4D5),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: SvgPicture.asset(
+                                  'assets/icons/google.svg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                'Entrar com o Google',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(0xFFE5B500),
+                                    fontWeight: FontWeight.w500),
+                              )
+                            ],
                           ),
                         ),
-                        backgroundColor: const Color(0xFFFDF4D5),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: SvgPicture.asset(
-                                'assets/icons/google.svg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              'Entrar com o Google',
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  color: Color(0xFFE5B500),
-                                  fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                      );
+                    })
                   ],
                 ),
               ),
-              LoadingUserController(controller: _controller)
+              const LoadingUserController()
             ],
           ),
         ),

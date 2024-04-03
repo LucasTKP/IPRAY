@@ -24,18 +24,18 @@ class _HomePageState extends State<HomePage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     try {
-              //       await _auth.signOut();
-              //       await _googleSignIn.signOut();
-              //       Navigator.pushReplacementNamed(context, '/signin');
-              //     } catch (e) {
-              //       print('Error signing out: $e');
-              //     }
-              //   },
-              //   child: Text('Deslogar'),
-              // ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await _auth.signOut();
+                    await _googleSignIn.signOut();
+                    Navigator.pushReplacementNamed(context, '/signin');
+                  } catch (e) {
+                    print('Error signing out: $e');
+                  }
+                },
+                child: Text('Deslogar'),
+              ),
               const TopBar(),
               Padding(
                 padding: EdgeInsets.symmetric(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ipray/controllers/user_controller.dart';
+import 'package:provider/provider.dart';
 
 class TimeLine extends StatefulWidget {
-  final UserController controller;
-  const TimeLine({super.key, required this.controller});
+  const TimeLine({super.key});
 
   @override
   State<TimeLine> createState() => _TimeLineState();
@@ -13,9 +13,8 @@ class TimeLine extends StatefulWidget {
 class _TimeLineState extends State<TimeLine> {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: widget.controller.step,
-      builder: (_, step, __) {
+    return Consumer<UserController>(
+      builder: (_, controller, child) {
         return Column(
           children: [
             Container(
@@ -39,7 +38,7 @@ class _TimeLineState extends State<TimeLine> {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
                 width: 6,
-                height: step > 1 ? 70 : 00,
+                height: controller.step > 1 ? 70 : 00,
                 decoration: const BoxDecoration(
                   color: Color(0xFFBF9000),
                 ),
@@ -59,7 +58,7 @@ class _TimeLineState extends State<TimeLine> {
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                     width: 70,
-                    height: step > 1 ? 70 : 0,
+                    height: controller.step > 1 ? 70 : 0,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(0xFFBF9000),
@@ -72,7 +71,9 @@ class _TimeLineState extends State<TimeLine> {
                       height: 70,
                       child: ColorFiltered(
                         colorFilter: ColorFilter.mode(
-                            step > 1 ? Colors.black : const Color(0xFF6D6D6D),
+                            controller.step > 1
+                                ? Colors.black
+                                : const Color(0xFF6D6D6D),
                             BlendMode.srcIn),
                         child: SvgPicture.asset(
                           'assets/icons/time.svg',
@@ -92,7 +93,7 @@ class _TimeLineState extends State<TimeLine> {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
                 width: 6,
-                height: step > 2 ? 70 : 00,
+                height: controller.step > 2 ? 70 : 00,
                 decoration: const BoxDecoration(
                   color: Color(0xFFBF9000),
                 ),
@@ -112,7 +113,7 @@ class _TimeLineState extends State<TimeLine> {
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                     width: 70,
-                    height: step > 2 ? 70 : 0,
+                    height: controller.step > 2 ? 70 : 0,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(0xFFBF9000),
@@ -125,7 +126,9 @@ class _TimeLineState extends State<TimeLine> {
                       height: 70,
                       child: ColorFiltered(
                         colorFilter: ColorFilter.mode(
-                            step > 2 ? Colors.black : const Color(0xFF6D6D6D),
+                            controller.step > 2
+                                ? Colors.black
+                                : const Color(0xFF6D6D6D),
                             BlendMode.srcIn),
                         child: SvgPicture.asset(
                           'assets/icons/city.svg',
