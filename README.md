@@ -1,4 +1,4 @@
-<h1 align="center">Movie App</h1>
+<h1 align="center">IPray</h1>
 <div>
 Projeto em desenvolvimento...
 </div>  
