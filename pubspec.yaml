@@ -1,10 +1,10 @@
 name: ipray
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: ">=3.3.1 <4.0.0"
 
 dependencies:
   flutter:
@@ -15,6 +15,9 @@ dependencies:
   firebase_auth: ^4.17.9
   google_sign_in: ^6.2.1
   fluttertoast: ^8.2.4
+  dio: ^5.4.1
+  lottie: ^3.1.0
+  table_calendar: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -24,21 +27,30 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets: 
+  assets:
     - assets/images/login.png
+    - assets/images/sunday.png
+    - assets/images/monday.png
+    - assets/images/tuesday.png
+    - assets/images/wednesday.png
+    - assets/images/thursday.png
+    - assets/images/friday.png
+    - assets/images/saturday.png
+
     - assets/icons/google.svg
     - assets/icons/time.svg
     - assets/icons/city.svg
 
+    - assets/lotties/lottieSplashPage.json
+
   fonts:
-  - family: Poppins
-    fonts:
-      - asset: assets/fonts/poppins/Poppins-Light.ttf
-        weight: 300
-      - asset: assets/fonts/poppins/Poppins-Regular.ttf
-        weight: 400
-      - asset: assets/fonts/poppins/Poppins-Medium.ttf
-        weight: 500
-      - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
-        weight: 700
-          
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
+          weight: 700

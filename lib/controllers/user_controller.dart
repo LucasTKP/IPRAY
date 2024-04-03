@@ -1,30 +1,101 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ipray/controllers/variables_address.dart';
 import 'package:ipray/models/users_models.dart';
+import 'package:ipray/service/dio_service.dart';
+import 'package:ipray/service/sington_service.dart';
 
 class UserController {
-  VariablesAddress variablesAddress = VariablesAddress();
+  final DioService dioService;
+  UserController(this.dioService);
+
   ValueNotifier<UserIpray?> user = ValueNotifier<UserIpray?>(null);
   ValueNotifier<int> step = ValueNotifier<int>(1);
+  VariablesAddress variablesAddress = VariablesAddress();
+  ValueNotifier<List<String>> cities = ValueNotifier([]);
+  TextEditingController name = TextEditingController();
+  TextEditingController age = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  String? state;
+  String? city;
+  String? currentCity;
+  String? currentState;
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<UserCredential?> signInWithGoogle(Function(String) onError) async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Once signed in, return the UserCredential
+      final response =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      return response;
+    } catch (e) {
+      String errorMessage = "Não foi possivel fazer login";
+      if (e is PlatformException) {
+        errorMessage = "Sem internet, por favor reconecte";
+      }
+      onError(errorMessage);
+
+      return null;
+    }
+  }
+
+  Future<UserIpray?> getUser(String email) async {
+    try {
+      final response =
+          await dioService.getDio().get('/users/$email?praies=true');
+      if (response.data.length > 0) {
+        final data = UserIpray.fromJson(response.data);
+        return data;
+      }
+      return UserIpray(
+          id: 0,
+          name: "",
+          email: "",
+          urlImage: "",
+          age: 0,
+          state: "",
+          city: "",
+          total: 0,
+          streak: 0,
+          createdDate: DateTime.now());
+    } catch (e) {
+      String error = 'Algo deu errado, tente novamente mais tarde.';
+      if (e is DioException) {
+        if (e.error is SocketException) {
+          error = 'Sem internet, por favor reconecte';
+        }
+      }
+
+      Fluttertoast.showToast(
+        msg: error,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return null;
+    }
   }
 
   void increment() {
@@ -37,7 +108,14 @@ class UserController {
     }
   }
 
-  void signUp() {}
+  updateState(String newState) {
+    state = newState;
+    city = null;
+  }
+
+  updateCity(String newCity) {
+    city = newCity;
+  }
 
   List<String> changeState(String state) {
     switch (state) {
@@ -100,13 +178,56 @@ class UserController {
     }
   }
 
-  void verificationsSignUp(GlobalKey<FormState> formKey) {
+  Future<bool> signUp() async {
+    try {
+      final response =
+          await dioService.getDio().post('/users', data: user.value);
+      if (response.data.length > 0) {
+        final data = UserIpray.fromJson(response.data);
+        SingtonService().user = data;
+      }
+      return true;
+    } catch (e) {
+      String error = 'Algo deu errado, tente novamente mais tarde.';
+      if (e is DioException) {
+        if (e.error is SocketException) {
+          error = 'Sem internet, por favor reconecte';
+        }
+      }
+
+      Fluttertoast.showToast(
+        msg: error,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> verificationsSignUp() async {
     if (formKey.currentState!.validate()) {
       if (step.value < 3) {
         increment();
       } else if (step.value == 3) {
-        signUp();
+        user.value = UserIpray.fromJson(
+          {
+            'name': name.text,
+            'email': FirebaseAuth.instance.currentUser!.email,
+            'age': int.parse(age.text),
+            'state': state,
+            'city': city,
+            'urlImage': '',
+            'total': 0,
+            'streak': 0,
+          },
+        );
+        return await signUp();
       }
     }
+    return false;
   }
 }

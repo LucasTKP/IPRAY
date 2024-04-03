@@ -14,12 +14,6 @@ class FormsWidget extends StatefulWidget {
 }
 
 class _FormsWidgetState extends State<FormsWidget> {
-  final TextEditingController name = TextEditingController();
-  final TextEditingController age = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String? state;
-  String? city;
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -27,19 +21,18 @@ class _FormsWidgetState extends State<FormsWidget> {
         valueListenable: widget.controller.step,
         builder: (_, step, __) {
           return Form(
-            key: formKey,
+            key: widget.controller.formKey,
             child: Column(
               children: [
                 step == 1
                     ? StepOne(
-                        name: name,
-                        formKey: formKey,
+                        controller: widget.controller,
                       )
                     : step == 2
-                        ? StepTwo(age: age)
+                        ? StepTwo(
+                            controller: widget.controller,
+                          )
                         : StepThree(
-                            state: state,
-                            city: city,
                             controller: widget.controller,
                           ),
                 const SizedBox(height: 20),
@@ -67,8 +60,17 @@ class _FormsWidgetState extends State<FormsWidget> {
                           )
                         : Container(),
                     ElevatedButton(
-                      onPressed: () =>
-                          widget.controller.verificationsSignUp(formKey),
+                      onPressed: () {
+                        widget.controller.isLoading.value = true;
+                        widget.controller.verificationsSignUp().then(
+                          (response) {
+                            if (response) {
+                              Navigator.pushReplacementNamed(context, '/home');
+                            }
+                            widget.controller.isLoading.value = false;
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

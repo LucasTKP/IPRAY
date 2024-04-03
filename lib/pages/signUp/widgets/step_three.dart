@@ -1,17 +1,11 @@
-// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:ipray/controllers/user_controller.dart';
-import 'package:ipray/controllers/variables_address.dart';
 
 class StepThree extends StatefulWidget {
-  String? state;
-  String? city;
   final UserController controller;
 
-  StepThree({
+  const StepThree({
     super.key,
-    this.state,
-    this.city,
     required this.controller,
   });
 
@@ -20,8 +14,7 @@ class StepThree extends StatefulWidget {
 }
 
 class _StepThreeState extends State<StepThree> {
-  VariablesAddress variablesAddress = VariablesAddress();
-  List<String> cities = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +35,16 @@ class _StepThreeState extends State<StepThree> {
           style: TextStyle(fontSize: 18),
         ),
         DropdownButtonFormField<String>(
+          value: widget.controller.currentState,
           onChanged: (String? newValue) {
+            widget.controller.updateState(newValue!);
             setState(() {
-              widget.state = newValue;
-              cities = widget.controller.changeState(newValue!);
+              widget.controller.currentCity = null;
+              widget.controller.currentState = newValue;
             });
+            widget.controller.cities.value = widget.controller.changeState(newValue);
           },
-          value: widget.state,
-          items: variablesAddress.states
+          items: widget.controller.variablesAddress.states
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -63,46 +58,59 @@ class _StepThreeState extends State<StepThree> {
             if (value == null || value.isEmpty) {
               return 'Por favor, selecione um estado.';
             }
+
             return null;
           },
         ),
         const SizedBox(height: 20),
-        if (widget.state != null) // Verifique se o estado foi selecionado
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Cidade',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 18),
-              ),
-              DropdownButtonFormField<String>(
-                onChanged: (String? newValue) {
-                  setState(() {
-                    widget.city = newValue;
-                  });
-                },
-                value: widget.city,
-                items: cities.map<DropdownMenuItem<String>>(
-                  (String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
-                decoration: const InputDecoration(
-                  hintText: 'Selecione uma cidade',
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, selecione uma cidade.';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
+        ValueListenableBuilder(
+            valueListenable: widget.controller.cities,
+            builder:
+                (BuildContext context, List<String> cities, Widget? child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Cidade',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: widget.controller.currentCity,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        widget.controller.currentCity = newValue;
+                      });
+                      widget.controller.updateCity(newValue!);
+                    },
+                    items: cities.map<DropdownMenuItem<String>>(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: SizedBox(
+                            width: 200,
+                            child: Text(
+                              value,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    decoration: const InputDecoration(
+                      hintText: 'Selecione uma cidade',
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, selecione uma cidade.';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ],
+              );
+            }),
       ],
     );
   }

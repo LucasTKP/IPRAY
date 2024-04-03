@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ipray/controllers/user_controller.dart';
 
 class StepTwo extends StatefulWidget {
-  final TextEditingController age;
-  const StepTwo({super.key, required this.age});
+  final UserController controller;
+  const StepTwo({required this.controller});
 
   @override
   State<StepTwo> createState() => _StepTwoState();
@@ -38,16 +39,16 @@ class _StepTwoState extends State<StepTwo> {
             int? intValue = int.tryParse(value);
 
             if (intValue == null || intValue <= 10) {
-              return 'O número precisa ser maior que 10.';
+              return 'Você precisa ter mais que 10 anos.';
             }
 
             if (intValue >= 120) {
-              return 'O número precisa ser menor que 120.';
+              return 'Você precisa ter menos que 100 anos.';
             }
 
             return null;
           },
-          controller: widget.age,
+          controller: widget.controller.age,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             border: OutlineInputBorder(

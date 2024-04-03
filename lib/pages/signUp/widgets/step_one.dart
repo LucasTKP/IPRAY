@@ -1,12 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:ipray/controllers/user_controller.dart';
 
 class StepOne extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController name;
+  final UserController controller;
   const StepOne({
     super.key,
-    required this.name, required this.formKey,
+    required this.controller,
   });
 
   @override
@@ -33,15 +33,18 @@ class _MyWidgetState extends State<StepOne> {
           style: TextStyle(fontSize: 18),
         ),
         TextFormField(
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[(0-9, a-z, A-Z)]"))
+          ],
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Por favor, insira seu nome.';
-            } else if(value.length < 4){
+            } else if (value.length < 4) {
               return 'Seu nome precisa no minímo ter 4 letras.';
             }
             return null;
           },
-          controller: widget.name,
+          controller: widget.controller.name,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             border: OutlineInputBorder(

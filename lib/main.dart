@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:ipray/pages/homePage/home_page.dart';
 import 'package:ipray/pages/signUp/signUp_page.dart';
 import 'package:ipray/pages/signin_page.dart';
 import 'package:ipray/pages/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,11 +26,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),
-      initialRoute: '/record',
+      initialRoute: '/splash',
       routes: {
         '/splash': (_) => const SplashPage(),
         '/signin': (_) => const SignInPage(),
-        '/record': (_) => const SignUpPage()
+        '/signup': (_) => const SignupPage(),
+        '/home': (_) => const HomePage()
       },
     );
   }

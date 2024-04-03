@@ -1,17 +1,16 @@
-# ipray
+<h1 align="center">Movie App</h1>
+<div>
+Projeto em desenvolvimento...
+</div>  
+  
 
-A new Flutter project.
+<div align="center">
+  
 
-## Getting Started
+https://github.com/LucasTKP/TheMovieApp/assets/101598532/080add33-b6a7-4e88-974a-8ab7dd093387
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+</div>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# ipray
+
