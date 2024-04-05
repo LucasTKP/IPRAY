@@ -1,3 +1,5 @@
+import 'package:ipray/models/praies_models.dart';
+
 class UserIpray {
   UserIpray({
     required this.id,
@@ -10,6 +12,7 @@ class UserIpray {
     required this.total,
     required this.streak,
     required this.createdDate,
+    required this.praies,
   });
 
   late final int id;
@@ -22,19 +25,20 @@ class UserIpray {
   late final int total;
   late final int streak;
   late final DateTime createdDate;
+  late final List<Praies> praies;
 
-  UserIpray copyWith({
-    int? id,
-    String? name,
-    String? email,
-    String? urlImage,
-    int? age,
-    String? state,
-    String? city,
-    int? total,
-    int? streak,
-    DateTime? createdDate,
-  }) {
+  UserIpray copyWith(
+      {int? id,
+      String? name,
+      String? email,
+      String? urlImage,
+      int? age,
+      String? state,
+      String? city,
+      int? total,
+      int? streak,
+      DateTime? createdDate,
+      List<Praies>? praies}) {
     return UserIpray(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -46,6 +50,7 @@ class UserIpray {
       total: total ?? this.total,
       streak: streak ?? this.streak,
       createdDate: createdDate ?? this.createdDate,
+      praies: praies ?? this.praies,
     );
   }
 
@@ -62,6 +67,10 @@ class UserIpray {
     createdDate = json['created_date'] != null
         ? DateTime.parse(json['created_date'])
         : DateTime.now();
+    praies = (json['praies'] as List<dynamic>?)
+            ?.map((e) => Praies.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,12 +85,13 @@ class UserIpray {
       'total': total,
       'streak': streak,
       'created_date': createdDate.toIso8601String(),
+      'praies': praies
     };
   }
 
   @override
   String toString() {
-    return 'UserIpray{id: $id, name: $name, email: $email, urlImage: $urlImage, age: $age, state: $state, city: $city, total: $total, streak: $streak, createdDate: $createdDate}';
+    return 'UserIpray{id: $id, name: $name, email: $email, urlImage: $urlImage, age: $age, state: $state, city: $city, total: $total, streak: $streak, createdDate: $createdDate, praies:$praies}';
   }
 }
 

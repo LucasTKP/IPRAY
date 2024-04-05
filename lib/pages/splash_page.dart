@@ -17,10 +17,12 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
       final user = FirebaseAuth.instance.currentUser;
+      final controller = Provider.of<UserController>(context, listen: false);
       if (user != null) {
-        Provider.of<UserController>(context, listen: false).getUser(user.email!).then((response) {
+        controller.getUser(user.email!).then((response) {
           if (response != null) {
             if (response.id != 0) {
+              controller.setUser(response);
               Navigator.pushReplacementNamed(context, '/home');
             } else {
               Navigator.pushReplacementNamed(context, '/signup');

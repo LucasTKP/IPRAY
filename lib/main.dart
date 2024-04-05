@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipray/controllers/pray_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/pages/homePage/home_page.dart';
 import 'package:ipray/pages/signUp/signUp_page.dart';
@@ -17,12 +18,13 @@ void main() async {
   );
 
   initializeDateFormatting().then(
-    (_) => runApp(
-      ChangeNotifierProvider(
-        create: (context) => UserController(DioServiceImp()),
-        child: const MyApp(),
-      ),
-    ),
+    (_) => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserController(DioServiceImp())),
+        ChangeNotifierProvider(create: (_) => PrayController(DioServiceImp())),
+      ],
+      child: const MyApp(),
+    )),
   );
 }
 

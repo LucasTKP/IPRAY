@@ -73,7 +73,8 @@ class UserController extends ChangeNotifier {
           city: "",
           total: 0,
           streak: 0,
-          createdDate: DateTime.now());
+          createdDate: DateTime.now(),
+          praies: []);
     } catch (e) {
       String error = 'Algo deu errado, tente novamente mais tarde.';
       if (e is DioException) {
