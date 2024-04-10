@@ -20,6 +20,7 @@ class _SplashPageState extends State<SplashPage> {
       final controller = Provider.of<UserController>(context, listen: false);
       if (user != null) {
         controller.getUser(user.email!).then((response) {
+          
           if (response != null) {
             if (response.id != 0) {
               controller.setUser(response);

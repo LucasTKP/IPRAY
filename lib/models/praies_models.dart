@@ -5,14 +5,16 @@ class Praies {
     required this.date,
   });
 
-  late final int id;
-  late final int idUser;
-  late final DateTime date;
+  final int id;
+  final int idUser;
+  final DateTime date;
 
-  Praies.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    idUser = json['id_user'] ?? 0;
-    date = json['date'] != null ? DateTime.parse(json['date']) : DateTime.now();
+  factory Praies.fromJson(Map<String, dynamic> json) {
+    return Praies(
+      id: json['id'] ?? 0,
+      idUser: json['id_user'] ?? 0,
+      date: json['date'] != null ? DateTime.parse(json['date']) :  DateTime.now(),
+    );
   }
 
   @override

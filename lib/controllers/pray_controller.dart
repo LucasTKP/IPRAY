@@ -10,13 +10,11 @@ class PrayController extends ChangeNotifier {
   final DioService dioService;
   PrayController(this.dioService);
 
-  Future<Praies?> createPray(String dateSelected, int idUser) async {
+  Future<Praies?> createPray(DateTime dateSelected, int idUser) async {
     try {
-      final response = await dioService
-          .getDio()
-          .post('/praies', data: {"id_user": idUser, "date": dateSelected});
+      final response = await dioService.getDio().post('/praies', data: {"id_user": idUser, "date": dateSelected});
       final dataPray = Praies.fromJson(response.data);
-
+      notifyListeners();
       return dataPray;
     } catch (e) {
       String errorMessage = 'Algo deu errado, tente novamente mais tarde.';
@@ -38,10 +36,11 @@ class PrayController extends ChangeNotifier {
     }
   }
 
-  Future<bool> deletePray(int id) async {
+  Future<bool> deletePray(DateTime dateSelected, int id) async {
     try {
       await dioService.getDio().delete('/praies/$id');
-
+      cache.remove(dateSelected);
+      notifyListeners();
       return true;
     } catch (e) {
       String errorMessage = 'Algo deu errado, tente novamente mais tarde.';
@@ -61,5 +60,9 @@ class PrayController extends ChangeNotifier {
       );
       return false;
     }
+  }
+
+  Future<bool> existsPray(DateTime dateSelected, List<Praies> praies) async {
+    return praies.any((element) => element.date == dateSelected);
   }
 }

@@ -61,21 +61,24 @@ class UserController extends ChangeNotifier {
           await dioService.getDio().get('/users/$email?praies=true');
       if (response.data.length > 0) {
         final data = UserIpray.fromJson(response.data);
+
         return data;
       }
       return UserIpray(
-          id: 0,
-          name: "",
-          email: "",
-          urlImage: "",
-          age: 0,
-          state: "",
-          city: "",
-          total: 0,
-          streak: 0,
-          createdDate: DateTime.now(),
-          praies: []);
+        id: 0,
+        name: "",
+        email: "",
+        urlImage: "",
+        age: 0,
+        state: "",
+        city: "",
+        total: 0,
+        streak: 0,
+        createdDate: DateTime.now(),
+        praies: [],
+      );
     } catch (e) {
+      debugPrint(e.toString());
       String error = 'Algo deu errado, tente novamente mais tarde.';
       if (e is DioException) {
         if (e.error is SocketException) {
@@ -191,22 +194,43 @@ class UserController extends ChangeNotifier {
       if (step < 3) {
         setStepIncrement();
       } else if (step == 3) {
-        user = UserIpray.fromJson(
-          {
-            'name': name.text,
-            'email': FirebaseAuth.instance.currentUser!.email,
-            'age': int.parse(age.text),
-            'state': state,
-            'city': city,
-            'urlImage': '',
-            'total': 0,
-            'streak': 0,
-          },
-        );
-        return await signUp();
+        // user = UserIpray.fromMap(
+        //   {
+        //     'name': name.text,
+        //     'email': FirebaseAuth.instance.currentUser!.email,
+        //     'age': int.parse(age.text),
+        //     'state': state,
+        //     'city': city,
+        //     'urlImage': '',
+        //     'total': 0,
+        //     'streak': 0,
+        //   },
+        // );
+        // return await signUp();
       }
     }
     return false;
+  }
+
+  int getLostDays() {
+    DateTime tomorrowStart = DateTime.utc(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day + 1,
+      0,
+      0,
+      0,
+      0,
+      0,
+    );
+    int lostDays = 0;
+    if (user != null) {
+      DateTime startDate = user?.createdDate ?? DateTime.now();
+      int total = user?.total ?? 0;
+      int differenceInDays = tomorrowStart.difference(startDate).inDays;
+      lostDays = differenceInDays - total;
+    }
+    return lostDays;
   }
 
   setUser(UserIpray newUser) {
