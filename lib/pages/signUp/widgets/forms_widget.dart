@@ -3,11 +3,10 @@ import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/pages/signUp/widgets/step_one.dart';
 import 'package:ipray/pages/signUp/widgets/step_three.dart';
 import 'package:ipray/pages/signUp/widgets/step_two.dart';
+import 'package:provider/provider.dart';
 
 class FormsWidget extends StatefulWidget {
-  final UserController controller;
-
-  const FormsWidget({super.key, required this.controller});
+  const FormsWidget({super.key});
 
   @override
   State<FormsWidget> createState() => _FormsWidgetState();
@@ -17,31 +16,24 @@ class _FormsWidgetState extends State<FormsWidget> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ValueListenableBuilder<int>(
-        valueListenable: widget.controller.step,
-        builder: (_, step, __) {
+      child: Consumer<UserController>(
+        builder: (BuildContext context, controller, Widget? child) {
           return Form(
-            key: widget.controller.formKey,
+            key: controller.formKey,
             child: Column(
               children: [
-                step == 1
-                    ? StepOne(
-                        controller: widget.controller,
-                      )
-                    : step == 2
-                        ? StepTwo(
-                            controller: widget.controller,
-                          )
-                        : StepThree(
-                            controller: widget.controller,
-                          ),
+                controller.step == 1
+                    ? const StepOne()
+                    : controller.step == 2
+                        ? const StepTwo()
+                        : const StepThree(),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    step > 1
+                    controller.step > 1
                         ? InkWell(
-                            onTap: () => widget.controller.decrement(),
+                            onTap: () => controller.setStepDecrement(),
                             child: const Row(
                               children: [
                                 Icon(
@@ -61,13 +53,13 @@ class _FormsWidgetState extends State<FormsWidget> {
                         : Container(),
                     ElevatedButton(
                       onPressed: () {
-                        widget.controller.isLoading.value = true;
-                        widget.controller.verificationsSignUp().then(
+                        controller.setIsLoading(true);
+                        controller.verificationsSignUp().then(
                           (response) {
                             if (response) {
                               Navigator.pushReplacementNamed(context, '/home');
                             }
-                            widget.controller.isLoading.value = false;
+                            controller.setIsLoading(false);
                           },
                         );
                       },
@@ -83,7 +75,7 @@ class _FormsWidgetState extends State<FormsWidget> {
                             const Color.fromARGB(255, 255, 227, 136),
                       ),
                       child: Text(
-                        step < 3 ? 'Próximo' : 'Finalizar',
+                        controller.step < 3 ? 'Próximo' : 'Finalizar',
                         style: const TextStyle(
                           fontSize: 20,
                           color: Color.fromARGB(255, 95, 95, 95),

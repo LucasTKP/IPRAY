@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipray/controllers/user_controller.dart';
+import 'package:provider/provider.dart';
 
 class StepTwo extends StatefulWidget {
-  final UserController controller;
-  const StepTwo({required this.controller});
+  const StepTwo({super.key});
 
   @override
   State<StepTwo> createState() => _StepTwoState();
@@ -29,35 +29,40 @@ class _StepTwoState extends State<StepTwo> {
           textAlign: TextAlign.start,
           style: TextStyle(fontSize: 18),
         ),
-        TextFormField(
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Por favor, insira um número.';
-            }
+        Consumer<UserController>(
+          builder: (_, controller, child) {
+            return TextFormField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira um número.';
+                }
 
-            int? intValue = int.tryParse(value);
+                int? intValue = int.tryParse(value);
 
-            if (intValue == null || intValue <= 10) {
-              return 'Você precisa ter mais que 10 anos.';
-            }
+                if (intValue == null || intValue <= 10) {
+                  return 'Você precisa ter mais que 10 anos.';
+                }
 
-            if (intValue >= 120) {
-              return 'Você precisa ter menos que 100 anos.';
-            }
+                if (intValue >= 120) {
+                  return 'Você precisa ter menos que 100 anos.';
+                }
 
-            return null;
-          },
-          controller: widget.controller.age,
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
+                return null;
+              },
+              controller: controller.age,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                ),
+                hintText: 'Digite sua idade',
               ),
-            ),
-            hintText: 'Digite sua idade',
-          ),
+            );
+          },
         ),
       ],
     );

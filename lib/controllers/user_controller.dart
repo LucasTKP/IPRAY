@@ -9,24 +9,21 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ipray/controllers/variables_address.dart';
 import 'package:ipray/models/users_models.dart';
 import 'package:ipray/service/dio_service.dart';
-import 'package:ipray/service/sington_service.dart';
 
-class UserController {
+class UserController extends ChangeNotifier {
   final DioService dioService;
   UserController(this.dioService);
 
-  ValueNotifier<UserIpray?> user = ValueNotifier<UserIpray?>(null);
-  ValueNotifier<int> step = ValueNotifier<int>(1);
+  UserIpray? user;
+  int step = 1;
+  List<String> cities = [];
+  bool isLoading = false;
   VariablesAddress variablesAddress = VariablesAddress();
-  ValueNotifier<List<String>> cities = ValueNotifier([]);
   TextEditingController name = TextEditingController();
   TextEditingController age = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   String? state;
   String? city;
-  String? currentCity;
-  String? currentState;
 
   Future<UserCredential?> signInWithGoogle(Function(String) onError) async {
     try {
@@ -64,20 +61,24 @@ class UserController {
           await dioService.getDio().get('/users/$email?praies=true');
       if (response.data.length > 0) {
         final data = UserIpray.fromJson(response.data);
+
         return data;
       }
       return UserIpray(
-          id: 0,
-          name: "",
-          email: "",
-          urlImage: "",
-          age: 0,
-          state: "",
-          city: "",
-          total: 0,
-          streak: 0,
-          createdDate: DateTime.now());
+        id: 0,
+        name: "",
+        email: "",
+        urlImage: "",
+        age: 0,
+        state: "",
+        city: "",
+        total: 0,
+        streak: 0,
+        createdDate: DateTime.now(),
+        praies: [],
+      );
     } catch (e) {
+      debugPrint(e.toString());
       String error = 'Algo deu errado, tente novamente mais tarde.';
       if (e is DioException) {
         if (e.error is SocketException) {
@@ -96,25 +97,6 @@ class UserController {
       );
       return null;
     }
-  }
-
-  void increment() {
-    step.value += 1;
-  }
-
-  void decrement() {
-    if (step.value > 0) {
-      step.value -= 1;
-    }
-  }
-
-  updateState(String newState) {
-    state = newState;
-    city = null;
-  }
-
-  updateCity(String newCity) {
-    city = newCity;
   }
 
   List<String> changeState(String state) {
@@ -180,11 +162,10 @@ class UserController {
 
   Future<bool> signUp() async {
     try {
-      final response =
-          await dioService.getDio().post('/users', data: user.value);
+      final response = await dioService.getDio().post('/users', data: user);
       if (response.data.length > 0) {
         final data = UserIpray.fromJson(response.data);
-        SingtonService().user = data;
+        setUser(data);
       }
       return true;
     } catch (e) {
@@ -210,24 +191,83 @@ class UserController {
 
   Future<bool> verificationsSignUp() async {
     if (formKey.currentState!.validate()) {
-      if (step.value < 3) {
-        increment();
-      } else if (step.value == 3) {
-        user.value = UserIpray.fromJson(
-          {
-            'name': name.text,
-            'email': FirebaseAuth.instance.currentUser!.email,
-            'age': int.parse(age.text),
-            'state': state,
-            'city': city,
-            'urlImage': '',
-            'total': 0,
-            'streak': 0,
-          },
-        );
-        return await signUp();
+      if (step < 3) {
+        setStepIncrement();
+      } else if (step == 3) {
+        // user = UserIpray.fromMap(
+        //   {
+        //     'name': name.text,
+        //     'email': FirebaseAuth.instance.currentUser!.email,
+        //     'age': int.parse(age.text),
+        //     'state': state,
+        //     'city': city,
+        //     'urlImage': '',
+        //     'total': 0,
+        //     'streak': 0,
+        //   },
+        // );
+        // return await signUp();
       }
     }
     return false;
+  }
+
+  int getLostDays() {
+    DateTime tomorrowStart = DateTime.utc(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day + 1,
+      0,
+      0,
+      0,
+      0,
+      0,
+    );
+    int lostDays = 0;
+    if (user != null) {
+      DateTime startDate = user?.createdDate ?? DateTime.now();
+      int total = user?.total ?? 0;
+      int differenceInDays = tomorrowStart.difference(startDate).inDays;
+      lostDays = differenceInDays - total;
+    }
+    return lostDays;
+  }
+
+  setUser(UserIpray newUser) {
+    user = newUser;
+    notifyListeners();
+  }
+
+  setStepIncrement() {
+    step += 1;
+    notifyListeners();
+  }
+
+  setStepDecrement() {
+    if (step > 0) {
+      step -= 1;
+      notifyListeners();
+    }
+  }
+
+  setCities(List<String> newCities) {
+    cities = newCities;
+    notifyListeners();
+  }
+
+  setIsLoading(bool newLoading) {
+    isLoading = newLoading;
+    notifyListeners();
+  }
+
+  setState(String? newState) {
+    state = newState;
+    city = null;
+    notifyListeners();
+  }
+
+  setCity(String? newCity) {
+    city = newCity;
+    notifyListeners();
   }
 }

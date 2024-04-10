@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ipray/controllers/user_controller.dart';
+import 'package:provider/provider.dart';
 
 class LoadingUserController extends StatefulWidget {
-  const LoadingUserController({super.key, required this.controller});
-  final UserController controller;
-
+  const LoadingUserController({super.key});
   @override
   State<LoadingUserController> createState() => _LoadingState();
 }
@@ -12,11 +11,10 @@ class LoadingUserController extends StatefulWidget {
 class _LoadingState extends State<LoadingUserController> {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: widget.controller.isLoading,
-      builder: (context, isLoadingValue, child) {
+    return Consumer<UserController>(
+      builder: (_, controller, child) {
         return Visibility(
-          visible: isLoadingValue,
+          visible: controller.isLoading,
           child: Align(
             alignment: Alignment.center,
             child: Container(
@@ -25,7 +23,8 @@ class _LoadingState extends State<LoadingUserController> {
               color: Colors.black.withOpacity(0.6),
               alignment: Alignment.center,
               child: const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 255, 246, 217)),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromARGB(255, 255, 246, 217)),
               ),
             ),
           ),

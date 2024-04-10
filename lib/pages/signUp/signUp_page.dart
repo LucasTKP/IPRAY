@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipray/components/loading_user_controller.dart';
-import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/pages/signUp/widgets/forms_widget.dart';
 import 'package:ipray/pages/signUp/widgets/timeline_widget.dart';
-import 'package:ipray/service/dio_service_imp.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -13,8 +11,6 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final UserController controller = UserController(DioServiceImp());
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,10 +32,10 @@ class _SignupPageState extends State<SignupPage> {
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.05,
                 ),
-                child: Column(
+                child: const Column(
                   children: [
-                    const SizedBox(height: 20),
-                    const Row(
+                    SizedBox(height: 20),
+                    Row(
                       children: [
                         Text(
                           'Perfil',
@@ -53,23 +49,19 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TimeLine(
-                            controller: controller,
-                          ),
-                          const SizedBox(width: 20),
-                          FormsWidget(controller: controller),
-                        ],
-                      ),
-                    )
+                    SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TimeLine(),
+                        SizedBox(width: 20),
+                        FormsWidget(),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              LoadingUserController(controller: controller)
+              const LoadingUserController(),
             ],
           ),
         ),
