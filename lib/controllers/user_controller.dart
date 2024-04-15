@@ -1,69 +1,49 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ipray/controllers/variables_address.dart';
+import 'package:ipray/controllers/pray_controller.dart';
+import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/models/users_models.dart';
-import 'package:ipray/service/dio_service.dart';
+import 'package:ipray/shared/app_navigator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserController extends ChangeNotifier {
-  final DioService dioService;
-  UserController(this.dioService);
+  final supabase = Supabase.instance.client;
+  final AppNavigator appNavigator;
+  final PrayController prayController;
+
+  UserController({required this.appNavigator, required this.prayController});
 
   UserIpray? user;
-  int step = 1;
-  List<String> cities = [];
-  bool isLoading = false;
-  VariablesAddress variablesAddress = VariablesAddress();
-  TextEditingController name = TextEditingController();
-  TextEditingController age = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String? state;
-  String? city;
 
-  Future<UserCredential?> signInWithGoogle(Function(String) onError) async {
+  Future<bool> createUser(Map<String, dynamic> dataUser) async {
     try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      final response =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      return response;
+      final response = await supabase.from('User').insert(dataUser).select();
+      UserIpray user = UserIpray.fromJson(response[0]);
+      setUser(user);
+      return true;
     } catch (e) {
-      String errorMessage = "Não foi possivel fazer login";
-      if (e is PlatformException) {
-        errorMessage = "Sem internet, por favor reconecte";
+      debugPrint(e.toString());
+      String error = 'Algo deu errado, tente novamente mais tarde.';
+      if (error is SocketException) {
+        error = 'Sem internet, por favor reconecte';
       }
-      onError(errorMessage);
-
-      return null;
+      appNavigator.showError(error);
+      return false;
     }
   }
 
   Future<UserIpray?> getUser(String email) async {
     try {
-      final response =
-          await dioService.getDio().get('/users/$email?praies=true');
-      if (response.data.length > 0) {
-        final data = UserIpray.fromJson(response.data);
+      final response = await supabase.from('User').select().eq('email', email);
+
+      if (response.isNotEmpty) {
+        final data = UserIpray.fromJson(response[0]);
 
         return data;
       }
+
       return UserIpray(
         id: 0,
         name: "",
@@ -75,141 +55,35 @@ class UserController extends ChangeNotifier {
         total: 0,
         streak: 0,
         createdDate: DateTime.now(),
-        praies: [],
       );
     } catch (e) {
       debugPrint(e.toString());
       String error = 'Algo deu errado, tente novamente mais tarde.';
-      if (e is DioException) {
-        if (e.error is SocketException) {
-          error = 'Sem internet, por favor reconecte';
-        }
+      if (e is SocketException) {
+        error = 'Sem internet, por favor reconecte';
       }
 
-      Fluttertoast.showToast(
-        msg: error,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      appNavigator.showError(error);
       return null;
     }
   }
 
-  List<String> changeState(String state) {
-    switch (state) {
-      case "Acre":
-        return variablesAddress.ac;
-      case "Alagoas":
-        return variablesAddress.al;
-      case "Amapá":
-        return variablesAddress.ap;
-      case "Amazonas":
-        return variablesAddress.am;
-      case "Bahia":
-        return variablesAddress.ba;
-      case "Ceará":
-        return variablesAddress.ce;
-      case "Distrito Federal":
-        return variablesAddress.df;
-      case "Espírito Santo":
-        return variablesAddress.es;
-      case "Goiás":
-        return variablesAddress.go;
-      case "Maranhão":
-        return variablesAddress.ma;
-      case "Mato Grosso":
-        return variablesAddress.mt;
-      case "Mato Grosso do Sul":
-        return variablesAddress.ms;
-      case "Minas Gerais":
-        return variablesAddress.mg;
-      case "Pará":
-        return variablesAddress.pa;
-      case "Paraíba":
-        return variablesAddress.pb;
-      case "Paraná":
-        return variablesAddress.pr;
-      case "Pernambuco":
-        return variablesAddress.pe;
-      case "Piauí":
-        return variablesAddress.pi;
-      case "Rio de Janeiro":
-        return variablesAddress.rj;
-      case "Rio Grande do Norte":
-        return variablesAddress.rn;
-      case "Rio Grande do Sul":
-        return variablesAddress.rs;
-      case "Rondônia":
-        return variablesAddress.ro;
-      case "Roraima":
-        return variablesAddress.rr;
-      case "Santa Catarina":
-        return variablesAddress.sc;
-      case "São Paulo":
-        return variablesAddress.sp;
-      case "Sergipe":
-        return variablesAddress.se;
-      case "Tocantins":
-        return variablesAddress.to;
-      default:
-        return [];
-    }
-  }
-
-  Future<bool> signUp() async {
-    try {
-      final response = await dioService.getDio().post('/users', data: user);
-      if (response.data.length > 0) {
-        final data = UserIpray.fromJson(response.data);
-        setUser(data);
-      }
-      return true;
-    } catch (e) {
-      String error = 'Algo deu errado, tente novamente mais tarde.';
-      if (e is DioException) {
-        if (e.error is SocketException) {
-          error = 'Sem internet, por favor reconecte';
+  void verifyUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      UserIpray? userIpray = await getUser(user.email!);
+      if (userIpray != null) {
+        if (userIpray.id != 0) {
+          setUser(userIpray);
+          appNavigator.navigateToHome();
+        } else {
+          appNavigator.navigateToSignup();
         }
       }
-
-      Fluttertoast.showToast(
-        msg: error,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return false;
+    } else {
+      await Future.delayed(const Duration(seconds: 2));
+      appNavigator.navigateToSignin();
     }
-  }
-
-  Future<bool> verificationsSignUp() async {
-    if (formKey.currentState!.validate()) {
-      if (step < 3) {
-        setStepIncrement();
-      } else if (step == 3) {
-        // user = UserIpray.fromMap(
-        //   {
-        //     'name': name.text,
-        //     'email': FirebaseAuth.instance.currentUser!.email,
-        //     'age': int.parse(age.text),
-        //     'state': state,
-        //     'city': city,
-        //     'urlImage': '',
-        //     'total': 0,
-        //     'streak': 0,
-        //   },
-        // );
-        // return await signUp();
-      }
-    }
-    return false;
   }
 
   int getLostDays() {
@@ -233,41 +107,63 @@ class UserController extends ChangeNotifier {
     return lostDays;
   }
 
+  int getPrayDays() {
+    return user!.total;
+  }
+
   setUser(UserIpray newUser) {
     user = newUser;
     notifyListeners();
   }
+  
+  addPray(DateTime selectedDay) async {
+    final UserIpray? user = this.user;
+    if (user != null) {
+      if (prayController.existsPrayInCache(selectedDay)) {
+        return;
+      }
 
-  setStepIncrement() {
-    step += 1;
-    notifyListeners();
-  }
-
-  setStepDecrement() {
-    if (step > 0) {
-      step -= 1;
-      notifyListeners();
+      final response = await prayController.createPray(selectedDay, user.id);
+      if (response is Praies) {
+        try {
+          final response = await supabase.from('User').update({'total': user.total + 1}).match({'id': user.id}).select();
+          final UserIpray newUser = UserIpray.fromJson(response[0]);
+          setUser(newUser);
+        } catch (e) {
+          debugPrint(e.toString());
+          String error = 'Algo deu errado, tente novamente mais tarde.';
+          if (error is SocketException) {
+            error = 'Sem internet, por favor reconecte';
+          }
+          appNavigator.showError(error);
+        }
+      }
     }
   }
 
-  setCities(List<String> newCities) {
-    cities = newCities;
-    notifyListeners();
-  }
+  removePray(DateTime selectedDay) async {
+    final UserIpray? user = this.user;
+    if (user != null) {
+      if (!prayController.existsPrayInCache(selectedDay)) {
+        return;
+      }
 
-  setIsLoading(bool newLoading) {
-    isLoading = newLoading;
-    notifyListeners();
-  }
+      final response = await prayController.deletePray(selectedDay, user.id);
 
-  setState(String? newState) {
-    state = newState;
-    city = null;
-    notifyListeners();
-  }
-
-  setCity(String? newCity) {
-    city = newCity;
-    notifyListeners();
+      if (response) {
+        try {
+          final response = await supabase.from('User').update({'total': user.total - 1}).match({'id': user.id}).select();
+          final UserIpray newUser = UserIpray.fromJson(response[0]);
+          setUser(newUser);
+        } catch (e) {
+          debugPrint(e.toString());
+          String error = 'Algo deu errado, tente novamente mais tarde.';
+          if (error is SocketException) {
+            error = 'Sem internet, por favor reconecte';
+          }
+          appNavigator.showError(error);
+        }
+      }
+    }
   }
 }

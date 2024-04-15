@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ipray/controllers/variables_bibleVerse.dart';
+import 'package:ipray/pages/home/home_controller.dart';
 
 class PhraseDaily extends StatelessWidget {
-  const PhraseDaily({super.key});
+  const PhraseDaily({super.key, required this.homeController});
+  final HomeController homeController;
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    int diaDoMes = now.day;
-    
-    VariablesPhrases variablesPhrases = VariablesPhrases();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,15 +30,15 @@ class PhraseDaily extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '"${variablesPhrases.bibleVerses[diaDoMes].frase}"',
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
+                  homeController.getPhrase(),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    "${variablesPhrases.bibleVerses[0].livro} ${variablesPhrases.bibleVerses[0].capitulo}:${variablesPhrases.bibleVerses[0].versiculo}",
-                  style: const TextStyle(fontWeight: FontWeight.w500),),
+                    homeController.getAuthorOfPhrase(),
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
                 )
               ],
             ),
