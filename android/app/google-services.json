@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "194906957335-87tndsjfjni509096o3ve2padiji5vfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ipray",
+            "certificate_hash": "dcc9a856e44db06b17f42e5f7f7d70170f6b1447"
+          }
+        },
+        {
           "client_id": "194906957335-nmifjanta8ciiaekj57poq5b9f1h1ilt.apps.googleusercontent.com",
           "client_type": 3
         }

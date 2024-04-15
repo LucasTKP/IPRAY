@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ipray/controllers/user_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:ipray/pages/signup/signup_controller.dart';
 
-class StepOne extends StatefulWidget {
+class StepOne extends StatelessWidget {
   const StepOne({
     super.key,
+    required this.signUpController,
   });
 
-  @override
-  State<StepOne> createState() => _MyWidgetState();
-}
+  final SignUpController signUpController;
 
-class _MyWidgetState extends State<StepOne> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,32 +28,27 @@ class _MyWidgetState extends State<StepOne> {
           textAlign: TextAlign.start,
           style: TextStyle(fontSize: 18),
         ),
-        Consumer<UserController>(builder: (_, controller, child) {
-          return TextFormField(
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[(0-9, a-z, A-Z)]"))
-            ],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor, insira seu nome.';
-              } else if (value.length < 4) {
-                return 'Seu nome precisa no minímo ter 4 letras.';
-              }
-              return null;
-            },
-            controller: controller.name,
-            decoration: const InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15),
-                ),
+        TextFormField(
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[(0-9, a-z, A-Z)]"))],
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor, insira seu nome.';
+            } else if (value.length < 4) {
+              return 'Seu nome precisa no minímo ter 4 letras.';
+            }
+            return null;
+          },
+          controller: signUpController.name,
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
               ),
-              hintText: 'Digite seu nome',
             ),
-          );
-        })
+            hintText: 'Digite seu nome',
+          ),
+        ),
       ],
     );
   }

@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '194906957335',
     projectId: 'ipray-c9f90',
     storageBucket: 'ipray-c9f90.appspot.com',
-    androidClientId: '194906957335-jocmoeoa742skk95og0jmugvk2r9f31s.apps.googleusercontent.com',
+    androidClientId: '194906957335-87tndsjfjni509096o3ve2padiji5vfo.apps.googleusercontent.com',
     iosClientId: '194906957335-nq6jssu6elfl333jtgt4stfqd5548751.apps.googleusercontent.com',
     iosBundleId: 'com.example.ipray',
   );

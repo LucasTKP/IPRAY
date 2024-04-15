@@ -1,106 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:ipray/controllers/user_controller.dart';
-import 'package:provider/provider.dart';
+import 'package:ipray/pages/signup/signup_controller.dart';
 
-class StepThree extends StatefulWidget {
+class StepThree extends StatelessWidget {
   const StepThree({
     super.key,
+    required this.signUpController,
   });
 
-  @override
-  State<StepThree> createState() => _StepThreeState();
-}
+  final SignUpController signUpController;
 
-class _StepThreeState extends State<StepThree> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserController>(
-      builder: (_, controller, child) {
-        return Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Cadastre sua localidade',
+          style: TextStyle(
+            color: Color(0xFF585858),
+            fontSize: 22,
+          ),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Estado',
+          textAlign: TextAlign.start,
+          style: TextStyle(fontSize: 18),
+        ),
+        DropdownButtonFormField<String>(
+          value: signUpController.state,
+          onChanged: (String? newValue) {
+            signUpController.setState(newValue);
+            signUpController.setCity(null);
+            signUpController.setCities(signUpController.changeState(newValue!));
+          },
+          items: signUpController.variablesAddress.states.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          decoration: const InputDecoration(
+            hintText: 'Selecione um estado',
+          ),
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor, selecione um estado.';
+            }
+
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Cadastre sua localidade',
-              style: TextStyle(
-                color: Color(0xFF585858),
-                fontSize: 22,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Estado',
+              'Cidade',
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 18),
             ),
             DropdownButtonFormField<String>(
-              value: controller.state,
+              value: signUpController.city,
               onChanged: (String? newValue) {
-                controller.setState(newValue);
-                controller.setCity(null);
-                controller.setCities(controller.changeState(newValue!));
+                signUpController.setCity(newValue!);
               },
-              items: controller.variablesAddress.states
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items: signUpController.cities.map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: SizedBox(
+                      width: 200,
+                      child: Text(
+                        value,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
               decoration: const InputDecoration(
-                hintText: 'Selecione um estado',
+                hintText: 'Selecione uma cidade',
               ),
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor, selecione um estado.';
+                  return 'Por favor, selecione uma cidade.';
                 }
 
                 return null;
               },
             ),
-            const SizedBox(height: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Cidade',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 18),
-                ),
-                DropdownButtonFormField<String>(
-                  value: controller.city,
-                  onChanged: (String? newValue) {
-                    controller.setCity(newValue!);
-                  },
-                  items: controller.cities.map<DropdownMenuItem<String>>(
-                    (String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: SizedBox(
-                          width: 200,
-                          child: Text(
-                            value,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    },
-                  ).toList(),
-                  decoration: const InputDecoration(
-                    hintText: 'Selecione uma cidade',
-                  ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, selecione uma cidade.';
-                    }
-
-                    return null;
-                  },
-                ),
-              ],
-            ),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
 }

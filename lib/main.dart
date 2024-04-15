@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:ipray/controllers/pray_controller.dart';
-import 'package:ipray/controllers/user_controller.dart';
-import 'package:ipray/pages/homePage/home_page.dart';
-import 'package:ipray/pages/signUp/signUp_page.dart';
-import 'package:ipray/pages/signin_page.dart';
-import 'package:ipray/pages/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ipray/service/dio_service_imp.dart';
-import 'package:provider/provider.dart';
+import 'package:ipray/pages/splash/splash_presenter.dart';
+import 'package:ipray/shared/dependencies.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  initializeDateFormatting().then(
-    (_) => runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserController(DioServiceImp())),
-        ChangeNotifierProvider(create: (_) => PrayController(DioServiceImp())),
-      ],
-      child: const MyApp(),
-    )),
+  await Supabase.initialize(
+    url: dotenv.env['URL_SUPABASE']!,
+    anonKey: dotenv.env['ANON_KEY']!,
   );
+
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,18 +29,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IPRAY',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-      ),
-      initialRoute: '/splash',
-      routes: {
-        '/splash': (_) => const SplashPage(),
-        '/signin': (_) => const SignInPage(),
-        '/signup': (_) => const SignupPage(),
-        '/home': (_) => const HomePage()
-      },
-    );
+        title: 'IPRAY',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+        ),
+        home: const InjectionPage(child: SplashPresenter()));
+  }
+}
+
+class InjectionPage extends StatefulWidget {
+  final Widget child;
+  const InjectionPage({super.key, required this.child});
+
+  @override
+  State<InjectionPage> createState() => _InjectionPageState();
+}
+
+class _InjectionPageState extends State<InjectionPage> {
+  @override
+  void initState() {
+    super.initState();
+    setupDependencies(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
