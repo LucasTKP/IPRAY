@@ -3,24 +3,53 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ipray/controllers/pray_controller.dart';
+import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/models/users_models.dart';
 import 'package:ipray/shared/app_navigator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UserController extends ChangeNotifier {
-  final supabase = Supabase.instance.client;
-  final AppNavigator appNavigator;
-  final PrayController prayController;
+import 'date_time_controller.dart';
+import 'firebase_controller.dart';
 
-  UserController({required this.appNavigator, required this.prayController});
-
+abstract class UserController extends ChangeNotifier {
   UserIpray? user;
 
+  Future<bool> createUser(Map<String, dynamic> dataUser);
+
+  Future<UserIpray?> getUser(String email);
+
+  verifyUser();
+
+  int getLostDays();
+
+  int getPrayDays();
+
+  setUser(UserIpray newUser);
+
+  addPray(DateTime selectedDay);
+
+  removePray(DateTime selectedDay);
+}
+
+class UserControllerImp extends UserController {
+  final AppNavigator appNavigator;
+  final PrayController prayController;
+  final SupabaseController supabaseController;
+  final DateTimeController dateTimeController;
+  final FirebaseController firebaseController;
+
+  UserControllerImp({
+    required this.appNavigator,
+    required this.prayController,
+    required this.supabaseController,
+    required this.dateTimeController,
+    required this.firebaseController,
+  });
+
+  @override
   Future<bool> createUser(Map<String, dynamic> dataUser) async {
     try {
-      final response = await supabase.from('User').insert(dataUser).select();
-      UserIpray user = UserIpray.fromJson(response[0]);
+      UserIpray user = await supabaseController.createUser(dataUser);
       setUser(user);
       return true;
     } catch (e) {
@@ -34,28 +63,11 @@ class UserController extends ChangeNotifier {
     }
   }
 
+  @override
   Future<UserIpray?> getUser(String email) async {
     try {
-      final response = await supabase.from('User').select().eq('email', email);
-
-      if (response.isNotEmpty) {
-        final data = UserIpray.fromJson(response[0]);
-
-        return data;
-      }
-
-      return UserIpray(
-        id: 0,
-        name: "",
-        email: "",
-        urlImage: "",
-        age: 0,
-        state: "",
-        city: "",
-        total: 0,
-        streak: 0,
-        createdDate: DateTime.now(),
-      );
+      UserIpray? user = await supabaseController.getUser(email);
+      return user;
     } catch (e) {
       debugPrint(e.toString());
       String error = 'Algo deu errado, tente novamente mais tarde.';
@@ -68,17 +80,16 @@ class UserController extends ChangeNotifier {
     }
   }
 
-  void verifyUser() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      UserIpray? userIpray = await getUser(user.email!);
+  @override
+  verifyUser() async {
+    User? userFirebase = firebaseController.getCurrentUser();
+    if (userFirebase != null) {
+      UserIpray? userIpray = await getUser(userFirebase.email!);
       if (userIpray != null) {
-        if (userIpray.id != 0) {
-          setUser(userIpray);
-          appNavigator.navigateToHome();
-        } else {
-          appNavigator.navigateToSignup();
-        }
+        setUser(userIpray);
+        appNavigator.navigateToHome();
+      } else {
+        appNavigator.navigateToSignup();
       }
     } else {
       await Future.delayed(const Duration(seconds: 2));
@@ -86,11 +97,13 @@ class UserController extends ChangeNotifier {
     }
   }
 
+  @override
   int getLostDays() {
+    DateTime dateNow= dateTimeController.getNow();
     DateTime tomorrowStart = DateTime.utc(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day + 1,
+      dateNow.year,
+      dateNow.month,
+      dateNow.day + 1,
       0,
       0,
       0,
@@ -98,24 +111,28 @@ class UserController extends ChangeNotifier {
       0,
     );
     int lostDays = 0;
+    UserIpray? user = this.user;
     if (user != null) {
-      DateTime startDate = user?.createdDate ?? DateTime.now();
-      int total = user?.total ?? 0;
+      DateTime startDate = user.createdDate;
+      int total = user.total;
       int differenceInDays = tomorrowStart.difference(startDate).inDays;
       lostDays = differenceInDays - total;
     }
     return lostDays;
   }
 
+  @override
   int getPrayDays() {
     return user!.total;
   }
 
+  @override
   setUser(UserIpray newUser) {
     user = newUser;
     notifyListeners();
   }
-  
+
+  @override
   addPray(DateTime selectedDay) async {
     final UserIpray? user = this.user;
     if (user != null) {
@@ -126,8 +143,7 @@ class UserController extends ChangeNotifier {
       final response = await prayController.createPray(selectedDay, user.id);
       if (response is Praies) {
         try {
-          final response = await supabase.from('User').update({'total': user.total + 1}).match({'id': user.id}).select();
-          final UserIpray newUser = UserIpray.fromJson(response[0]);
+          final UserIpray newUser = await supabaseController.incrementUserTotal(user);
           setUser(newUser);
         } catch (e) {
           debugPrint(e.toString());
@@ -141,6 +157,7 @@ class UserController extends ChangeNotifier {
     }
   }
 
+  @override
   removePray(DateTime selectedDay) async {
     final UserIpray? user = this.user;
     if (user != null) {
@@ -152,8 +169,7 @@ class UserController extends ChangeNotifier {
 
       if (response) {
         try {
-          final response = await supabase.from('User').update({'total': user.total - 1}).match({'id': user.id}).select();
-          final UserIpray newUser = UserIpray.fromJson(response[0]);
+          final UserIpray newUser = await supabaseController.decrementUserTotal(user);
           setUser(newUser);
         } catch (e) {
           debugPrint(e.toString());

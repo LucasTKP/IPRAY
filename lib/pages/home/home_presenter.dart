@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:ipray/pages/home/home_controller.dart';
 import 'package:ipray/pages/home/home_page.dart';
+import 'package:ipray/shared/dependencies.dart';
+
+import '../../controllers/variables_bibleVerse.dart';
 
 class HomePresenter extends StatefulWidget {
   const HomePresenter({super.key});
@@ -11,11 +14,15 @@ class HomePresenter extends StatefulWidget {
 
 class _HomePresenterState extends State<HomePresenter> {
   late HomeController homeController;
+  late VariablesPhrases variablesPhrases;
+
+
 
   @override
   void initState() {
     super.initState();
-    homeController = HomeController();
+    variablesPhrases = VariablesPhrases();
+    homeController = HomeController(variablesPhrases: variablesPhrases, dateTimeController: Dependencies.instance.get());
   }
 
   @override

@@ -20,11 +20,6 @@ class DialogSelectDayController extends ChangeNotifier {
 
   late bool praySelected;
 
-  setPraySelected(bool value) {
-    praySelected = value;
-    notifyListeners();
-  }
-
   handleClickButtonSave() {
     if (praySelected) {
       calendarController.processResponseDialogSelectDay(daySelected, true);
@@ -34,4 +29,10 @@ class DialogSelectDayController extends ChangeNotifier {
       appNavigator.navigatePop();
     }
   }
+
+  setPraySelected(bool value) {
+    praySelected = value;
+    notifyListeners();
+  }
+
 }

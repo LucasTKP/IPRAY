@@ -2,24 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/pray_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/shared/app_navigator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CalendarController extends ChangeNotifier {
+import '../../../../controllers/date_time_controller.dart';
+abstract class CalendarController extends ChangeNotifier {
   DateTime firstDay = DateTime.utc(2024, 1, 1);
   DateTime lastDay = DateTime.utc(2030, 3, 14);
-  DateTime dateNow = DateTime.now();
-  final supabase = Supabase.instance.client;
 
+  onDaySelected(DateTime selectedDay);
+
+  Future<String> getDayIcon(DateTime day);
+
+  void processResponseDialogSelectDay(DateTime selectedDay, bool? response);
+}
+
+
+class CalendarControllerImp extends CalendarController {
   final Function(DateTime daySelected) showDialogSelectDay;
   final PrayController prayController;
   final UserController userController;
   final AppNavigator appNavigator;
+  final DateTimeController dateTimeController;
 
-  CalendarController({
+  CalendarControllerImp({
     required this.showDialogSelectDay,
     required this.prayController,
     required this.userController,
     required this.appNavigator,
+    required this.dateTimeController,
   }) {
     prayController.addListener(notifyListeners);
     userController.addListener(notifyListeners);
@@ -32,10 +41,11 @@ class CalendarController extends ChangeNotifier {
     userController.removeListener(notifyListeners);
   }
 
-  DateTime get createdDateUser => userController.user!.createdDate.subtract(const Duration(days: 1));
-
+  @override
   onDaySelected(DateTime selectedDay) {
-    if (selectedDay.isBefore(createdDateUser) || selectedDay.isAfter(dateNow)) {
+    DateTime dateNow = dateTimeController.getNow();
+
+    if (selectedDay.isBefore(userController.user!.createdDate) || selectedDay.isAfter(dateNow)) {
       appNavigator.showError("Você só pode selecionar algum dia entre o seu cadastro e  o dia de hoje");
       return;
     }
@@ -43,16 +53,20 @@ class CalendarController extends ChangeNotifier {
     showDialogSelectDay(selectedDay);
   }
 
+  @override
   Future<String> getDayIcon(DateTime day) async {
+    DateTime dateNow = dateTimeController.getNow();
+
     String response = "";
 
-    if (dateNow.isAfter(day) && createdDateUser.isBefore(day)) {
+    if (dateNow.isAfter(day) && userController.user!.createdDate.isBefore(day) || userController.user!.createdDate.isAtSameMomentAs(day)) {
       final result = await prayController.existsPray(day, userController.user!.id);
       response = result ? '🙏' : '😭';
     }
     return response;
   }
 
+  @override
   void processResponseDialogSelectDay(DateTime selectedDay, bool? response) async {
     if (response == null) return;
 

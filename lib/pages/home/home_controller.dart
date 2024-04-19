@@ -1,8 +1,15 @@
 import 'package:ipray/controllers/variables_bibleVerse.dart';
 
+import '../../controllers/date_time_controller.dart';
+
 class HomeController {
+  final VariablesPhrases variablesPhrases;
+  final DateTimeController dateTimeController;
+
+  HomeController({required this.variablesPhrases, required this.dateTimeController});
+
   String getImagePath() {
-    DateTime now = DateTime.now();
+    DateTime now = dateTimeController.getNow();
     int dayOfWeek = now.weekday;
     String dayName = '';
 
@@ -36,15 +43,13 @@ class HomeController {
   }
 
   String getPhrase() {
-    VariablesPhrases variablesPhrases = VariablesPhrases();
-    DateTime now = DateTime.now();
+    DateTime now = dateTimeController.getNow();
     int diaDoMes = now.day;
 
     return variablesPhrases.bibleVerses[diaDoMes].frase;
   }
 
   String getAuthorOfPhrase() {
-    VariablesPhrases variablesPhrases = VariablesPhrases();
     String author = "${variablesPhrases.bibleVerses[0].livro} ${variablesPhrases.bibleVerses[0].capitulo}:${variablesPhrases.bibleVerses[0].versiculo}";
     return author;
   }

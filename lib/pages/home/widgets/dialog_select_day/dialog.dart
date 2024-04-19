@@ -18,7 +18,7 @@ class DialogSelectDay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              formatDate(daySelected.toString()),
+              daySelected.formatDate(),
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
             ),

@@ -1,7 +1,8 @@
 import 'package:intl/intl.dart';
 
-String formatDate(String dataString) {
-  DateTime date = DateTime.parse(dataString);
-  DateFormat formatador = DateFormat.yMMMMd('pt_BR');
-  return formatador.format(date);
+extension DateUtil on DateTime {
+  String formatDate() {
+    DateFormat formatador = DateFormat.yMMMMd('pt_BR');
+    return formatador.format(this);
+  }
 }

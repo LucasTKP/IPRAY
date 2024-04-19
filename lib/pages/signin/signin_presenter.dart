@@ -19,10 +19,10 @@ class _SignInPresenterState extends State<SignInPresenter> {
     signInController = SignInController(
       userController: Dependencies.instance.get(),
       appNavigator: Dependencies.instance.get(),
+      googleController: Dependencies.instance.get(),
+      firebaseController: Dependencies.instance.get(),
     );
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
