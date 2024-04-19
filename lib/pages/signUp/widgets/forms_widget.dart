@@ -45,7 +45,10 @@ class FormsWidget extends StatelessWidget {
                       )
                     : Container(),
                 ElevatedButton(
-                  onPressed: () => signUpController.verificationsSignUp(),
+                  onPressed: () {     if (signUpController.formKey.currentState!.validate()) {
+    signUpController.verificationStepSignUp();
+    }
+    },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

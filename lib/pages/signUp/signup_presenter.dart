@@ -16,7 +16,10 @@ class _SignUpPresenterState extends State<SignUpPresenter> {
   @override
   void initState() {
     super.initState();
-    signUpController = SignUpController(userController: Dependencies.instance.get(), appNavigator: Dependencies.instance.get());
+    signUpController = SignUpController(
+      userController: Dependencies.instance.get(),
+      appNavigator: Dependencies.instance.get(), firebaseController: Dependencies.instance.get(), dateTimeController: Dependencies.instance.get(),
+    );
   }
 
   @override

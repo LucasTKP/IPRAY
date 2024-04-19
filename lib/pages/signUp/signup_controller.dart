@@ -1,16 +1,22 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ipray/controllers/date_time_controller.dart';
+import 'package:ipray/controllers/firebase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/controllers/variables_address.dart';
 import 'package:ipray/shared/app_navigator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpController extends ChangeNotifier {
   final UserController userController;
   final AppNavigator appNavigator;
-  SignUpController({required this.userController, required this.appNavigator});
+  final FirebaseController firebaseController;
+  final DateTimeController dateTimeController;
 
-  final supabase = Supabase.instance.client;
+  SignUpController(
+      {required this.userController,
+      required this.appNavigator,
+      required this.firebaseController,
+      required this.dateTimeController});
+
   VariablesAddress variablesAddress = VariablesAddress();
   int step = 1;
   List<String> cities = [];
@@ -83,12 +89,12 @@ class SignUpController extends ChangeNotifier {
   }
 
   signUp() async {
-    DateTime now = DateTime.now();
+    DateTime now = dateTimeController.getNow();
     DateTime startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0, 0, 0);
 
     final dataUser = {
       'name': name.text,
-      'email': FirebaseAuth.instance.currentUser!.email,
+      'email': firebaseController.getEmail(),
       'age': int.parse(age.text),
       'state': state,
       'city': city,
@@ -103,16 +109,15 @@ class SignUpController extends ChangeNotifier {
     }
   }
 
-  verificationsSignUp() {
-    if (formKey.currentState!.validate()) {
-      if (step < 3) {
-        setStepIncrement();
-      } else if (step == 3) {
-        setIsLoading(true);
-        signUp();
-      }
+  verificationStepSignUp() async {
+    if (step < 3) {
+      step++;
+      notifyListeners();
+    } else if (step == 3) {
+      setIsLoading(true);
+      await signUp();
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   setState(String? newState) {
@@ -126,14 +131,9 @@ class SignUpController extends ChangeNotifier {
     notifyListeners();
   }
 
-  setStepIncrement() {
-    step += 1;
-    notifyListeners();
-  }
-
   setStepDecrement() {
     if (step > 0) {
-      step -= 1;
+      step--;
       notifyListeners();
     }
   }

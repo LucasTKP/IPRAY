@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipray/controllers/date_time_controller.dart';
 import 'package:ipray/pages/home/widgets/calendar/calendar_controller.dart';
 import 'package:ipray/pages/home/widgets/calendar/calendar.dart';
 import 'package:ipray/pages/home/widgets/dialog_select_day/dialog_presenter.dart';
@@ -17,11 +18,12 @@ class _CalendarPresenterState extends State<CalendarPresenter> {
   @override
   void initState() {
     super.initState();
-    calendarController = CalendarController(
+    calendarController = CalendarControllerImp(
       showDialogSelectDay: showDialogSelectDay,
       prayController: Dependencies.instance.get(),
       userController: Dependencies.instance.get(),
       appNavigator: Dependencies.instance.get(),
+      dateTimeController: Dependencies.instance.get(),
     );
   }
 
@@ -34,7 +36,7 @@ class _CalendarPresenterState extends State<CalendarPresenter> {
             getDayIcon: calendarController.getDayIcon,
             firstDay: calendarController.firstDay,
             lastDay: calendarController.lastDay,
-            dateNow: calendarController.dateNow,
+            dateNow: Dependencies.instance.get<DateTimeController>().getNow(),
           )),
     );
   }
