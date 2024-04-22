@@ -1,4 +1,5 @@
 import 'package:ipray/controllers/supabase_controller.dart';
+import 'package:ipray/models/app_info_models.dart';
 import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/models/users_models.dart';
 
@@ -34,4 +35,10 @@ class MockSupabaseController extends SupabaseController {
   @override
   Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser) => onGetPray(dateSelected, idUser);
   Future<List<Map<String, dynamic>>> Function(DateTime dateSelected, int idUser) onGetPray = (dateSelected, idUser) => throw UnimplementedError();
+
+  @override
+  Future<AppInfo> getAppInfo() {
+    // TODO: implement getAppInfo
+    throw UnimplementedError();
+  }
 }

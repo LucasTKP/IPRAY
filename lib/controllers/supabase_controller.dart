@@ -1,6 +1,7 @@
 import 'package:ipray/models/users_models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../models/app_info_models.dart';
 import '../models/praies_models.dart';
 
 abstract class SupabaseController {
@@ -17,6 +18,8 @@ abstract class SupabaseController {
   Future<Praies> deletePray(DateTime dateSelected, int idUser);
 
   Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser);
+
+  Future<AppInfo> getAppInfo();
 }
 
 class SupabaseControllerImp extends SupabaseController {
@@ -74,6 +77,16 @@ class SupabaseControllerImp extends SupabaseController {
   Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser) async{
     final response = await supabase.from('Pray').select().match({'id_user': idUser, 'date': dateSelected});
     return response;
+  }
+
+  @override
+  Future<AppInfo> getAppInfo() async{
+    final response = await supabase.from('App').select()
+        .order('created_at', ascending: false)
+        .limit(1)
+        .single();
+    AppInfo appInfo = AppInfo.fromJson(response);
+    return appInfo;
   }
 }
 
