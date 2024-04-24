@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipray/controllers/firebase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 
 import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/models/users_models.dart';
-import 'package:mocktail/mocktail.dart';
 
 import '../mock/mock_app_navigator.dart';
 import '../mock/mock_date_time_controller.dart';

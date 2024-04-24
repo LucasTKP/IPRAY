@@ -5,6 +5,7 @@ import 'package:ipray/controllers/google_controller.dart';
 import 'package:ipray/controllers/pray_controller.dart';
 import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
+import 'package:ipray/pages/routes/routes_controller.dart';
 import 'package:ipray/shared/app_navigator.dart';
 
 class Dependencies {
@@ -33,8 +34,9 @@ void setupDependencies(BuildContext context) {
   Dependencies.instance.add<FirebaseController>(FirebaseControllerImp());
   Dependencies.instance.add<SupabaseController>(SupabaseControllerImp());
   Dependencies.instance.add<GoogleController>(GoogleControllerImp());
-  // Dependencies.instance.add<SupabaseController>(SupabaseControllerFake());
   Dependencies.instance.add<AppNavigator>(AppNavigatorImpl(context: context));
+  Dependencies.instance.add<RoutesController>(RoutesControllerImp());
+  // Dependencies.instance.add<SupabaseController>(SupabaseControllerFake());
   Dependencies.instance.add<PrayController>(
     PrayControllerImp(
       appNavigator: Dependencies.instance.get(),

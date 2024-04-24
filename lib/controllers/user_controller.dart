@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ipray/controllers/pray_controller.dart';
@@ -82,24 +81,24 @@ class UserControllerImp extends UserController {
 
   @override
   verifyUser() async {
+    await Future.delayed(const Duration(seconds: 2));
     User? userFirebase = firebaseController.getCurrentUser();
     if (userFirebase != null) {
       UserIpray? userIpray = await getUser(userFirebase.email!);
       if (userIpray != null) {
         setUser(userIpray);
-        appNavigator.navigateToHome();
+        appNavigator.navigateToRoutes();
       } else {
         appNavigator.navigateToSignup();
       }
     } else {
-      await Future.delayed(const Duration(seconds: 2));
       appNavigator.navigateToSignin();
     }
   }
 
   @override
   int getLostDays() {
-    DateTime dateNow= dateTimeController.getNow();
+    DateTime dateNow = dateTimeController.getNow();
     DateTime tomorrowStart = DateTime.utc(
       dateNow.year,
       dateNow.month,

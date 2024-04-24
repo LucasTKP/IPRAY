@@ -65,7 +65,7 @@ void main() {
 
     userController.onSetUser = (UserIpray userIpray) => {};
 
-    appNavigator.onNavigateToHome = () => {};
+    appNavigator.onNavigateToRoutes = () => {};
 
     // Act
     await controller.signInWithGoogle();
@@ -127,8 +127,8 @@ void main() {
     bool setUser = false;
     userController.onSetUser = (UserIpray userIpray) => {setUser = true};
 
-    bool navigateToHomeCalled = false;
-    appNavigator.onNavigateToHome = () => navigateToHomeCalled = true;
+    bool navigateToRoutesCalled = false;
+    appNavigator.onNavigateToRoutes = () => navigateToRoutesCalled = true;
 
     // Act
     await controller.processSignInWithGoogle("");
@@ -137,7 +137,7 @@ void main() {
     expect(notifyListenerCalled, true);
     expect(controller.isLoading, false);
     expect(setUser, true);
-    expect(navigateToHomeCalled, true);
+    expect(navigateToRoutesCalled, true);
   });
 
   test('SignInController.processSignInWithGoogle(user not found)', () async {

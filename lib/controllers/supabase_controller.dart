@@ -1,6 +1,7 @@
 import 'package:ipray/models/users_models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../models/app_info_models.dart';
 import '../models/praies_models.dart';
 
 abstract class SupabaseController {
@@ -17,6 +18,10 @@ abstract class SupabaseController {
   Future<Praies> deletePray(DateTime dateSelected, int idUser);
 
   Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser);
+
+  Future<AppInfo> getAppInfo();
+
+  Future<List<UserIpray>> getTopUsersMorePray();
 }
 
 class SupabaseControllerImp extends SupabaseController {
@@ -56,8 +61,7 @@ class SupabaseControllerImp extends SupabaseController {
 
   @override
   Future<Praies> createPray(DateTime dateSelected, int idUser) async {
-    List<Map<String, dynamic>> response =
-        await supabase.from('Pray').insert({'id_user': idUser, 'date': dateSelected.toIso8601String()}).select();
+    List<Map<String, dynamic>> response = await supabase.from('Pray').insert({'id_user': idUser, 'date': dateSelected.toIso8601String()}).select();
 
     Praies dataPray = Praies.fromJson(response[0]);
     return dataPray;
@@ -71,9 +75,31 @@ class SupabaseControllerImp extends SupabaseController {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser) async{
+  Future<List<Map<String, dynamic>>> getPray(DateTime dateSelected, int idUser) async {
     final response = await supabase.from('Pray').select().match({'id_user': idUser, 'date': dateSelected});
     return response;
+  }
+
+  @override
+  Future<AppInfo> getAppInfo() async {
+    final response = await supabase.from('App').select().order('created_at', ascending: false).limit(1).single();
+    AppInfo appInfo = AppInfo.fromJson(response);
+    return appInfo;
+  }
+
+  @override
+  Future<List<UserIpray>> getTopUsersMorePray() async {
+    final response = await supabase.from('User').select().order('total', ascending: false).limit(10);
+
+    List<UserIpray> listUserIPray(List<dynamic> usersSupabase) {
+      return usersSupabase.map((user) {
+        return UserIpray.fromJson(user);
+      }).toList();
+    }
+
+    List<UserIpray> users = listUserIPray(response);
+
+    return users;
   }
 }
 

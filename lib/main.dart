@@ -55,6 +55,6 @@ class _InjectionPageState extends State<InjectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return Scaffold(body: widget.child);
   }
 }

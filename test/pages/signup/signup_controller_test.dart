@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipray/pages/signup/signup_controller.dart';
-import 'package:mocktail/mocktail.dart';
 
 import '../../mock/mock_app_navigator.dart';
 import '../../mock/mock_date_time_controller.dart';
@@ -57,8 +56,8 @@ void main() {
       return true;
     };
 
-    bool navigateToHomeCalled = false;
-    appNavigator.onNavigateToHome = () => navigateToHomeCalled = true;
+    bool navigateToRoutesCalled = false;
+    appNavigator.onNavigateToRoutes = () => navigateToRoutesCalled = true;
 
     // Act
     await controller.signUp();
@@ -74,7 +73,7 @@ void main() {
     expect(createUserData["streak"], 0);
     expect(createUserData["created_date"], "2024-04-15T00:00:00.000");
     expect(notifyListenerCalled, false);
-    expect(navigateToHomeCalled, true);
+    expect(navigateToRoutesCalled, true);
   });
 
   test('SignUpController.signUp(user not created)', () async {
@@ -94,15 +93,15 @@ void main() {
       return false;
     };
 
-    bool navigateToHomeCalled = false;
-    appNavigator.onNavigateToHome = () => navigateToHomeCalled = true;
+    bool navigateToRoutesCalled = false;
+    appNavigator.onNavigateToRoutes = () => navigateToRoutesCalled = true;
 
     // Act
     await controller.signUp();
 
     // Assert
     expect(notifyListenerCalled, false);
-    expect(navigateToHomeCalled, false);
+    expect(navigateToRoutesCalled, false);
   });
 
   test('SignUpController.verificationSignUp(step = 1)', () async{
@@ -143,8 +142,8 @@ void main() {
       return true;
     };
 
-    bool navigateToHomeCalled = false;
-    appNavigator.onNavigateToHome = () => navigateToHomeCalled = true;
+    bool navigateToRoutesCalled = false;
+    appNavigator.onNavigateToRoutes= () => navigateToRoutesCalled = true;
 
 
     // Act
@@ -155,6 +154,7 @@ void main() {
     expect(isLoadingCalled, [true, false]);
     expect(controller.step, 3);
     expect(createUserData["age"], 20);
+    expect(navigateToRoutesCalled, true);
   });
 
   // test('SignUpController.verificationSignUp()', () async{

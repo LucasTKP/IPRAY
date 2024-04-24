@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ipray/controllers/firebase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/models/users_models.dart';
@@ -15,11 +14,7 @@ class SignInController extends ChangeNotifier {
   final GoogleController googleController;
   final FirebaseController firebaseController;
 
-  SignInController(
-      {required this.userController,
-      required this.appNavigator,
-      required this.googleController,
-      required this.firebaseController});
+  SignInController({required this.userController, required this.appNavigator, required this.googleController, required this.firebaseController});
 
   bool isLoading = false;
 
@@ -56,7 +51,7 @@ class SignInController extends ChangeNotifier {
     setIsLoading(false);
     if (user != null) {
       userController.setUser(user);
-      appNavigator.navigateToHome();
+      appNavigator.navigateToRoutes();
     } else {
       appNavigator.navigateToSignup();
     }
