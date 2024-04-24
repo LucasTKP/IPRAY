@@ -3,7 +3,7 @@ import 'package:ipray/pages/home/home_controller.dart';
 import 'package:ipray/pages/home/home_page.dart';
 import 'package:ipray/shared/dependencies.dart';
 
-import '../../controllers/variables_bibleVerse.dart';
+import '../../controllers/variables_bible_phrases.dart';
 
 class HomePresenter extends StatefulWidget {
   const HomePresenter({super.key});

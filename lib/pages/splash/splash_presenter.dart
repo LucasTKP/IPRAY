@@ -19,7 +19,6 @@ class _SplashPresenterState extends State<SplashPresenter> {
     super.initState();
     splashController = SplashController(supabaseController: Dependencies.instance.get());
     WidgetsBinding.instance.addPostFrameCallback((timestamp) async {
-      
       if(await splashController.verifyVersionApp()) {
         Dependencies.instance.get<UserController>().verifyUser();
       }

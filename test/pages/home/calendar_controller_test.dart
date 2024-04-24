@@ -46,7 +46,6 @@ void main() {
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
 
-    int id = 0;
     bool error = false;
     appNavigator.onShowError = (value) => {
       error = true
@@ -82,7 +81,6 @@ void main() {
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 19, 0, 0, 0, 0, 0);
 
-    int id = 0;
     bool error = false;
     appNavigator.onShowError = (value) => {
       error = true
@@ -114,8 +112,6 @@ void main() {
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
-
-    int id = 0;
 
     prayController.onExistsPray = (selectedDay, id) async {
       return true;
@@ -152,8 +148,6 @@ void main() {
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
 
-    int id = 0;
-
     prayController.onExistsPray = (selectedDay, id) async {
       return false;
     };
@@ -184,8 +178,6 @@ void main() {
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
-    int id = 0;
-
     prayController.onExistsPray = (selectedDay, id) async {
       return false;
     };
@@ -214,8 +206,6 @@ void main() {
     DateTime selectedDay = DateTime(2024, 4, 14, 0, 0, 0, 0, 0);
 
     dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
-
-    int id = 0;
 
     prayController.onExistsPray = (selectedDay, id) async {
       return false;

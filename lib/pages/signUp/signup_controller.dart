@@ -11,11 +11,7 @@ class SignUpController extends ChangeNotifier {
   final FirebaseController firebaseController;
   final DateTimeController dateTimeController;
 
-  SignUpController(
-      {required this.userController,
-      required this.appNavigator,
-      required this.firebaseController,
-      required this.dateTimeController});
+  SignUpController({required this.userController, required this.appNavigator, required this.firebaseController, required this.dateTimeController});
 
   VariablesAddress variablesAddress = VariablesAddress();
   int step = 1;
@@ -105,7 +101,7 @@ class SignUpController extends ChangeNotifier {
     };
     bool result = await userController.createUser(dataUser);
     if (result) {
-      appNavigator.navigateToHome();
+      appNavigator.navigateToRoutes();
     }
   }
 

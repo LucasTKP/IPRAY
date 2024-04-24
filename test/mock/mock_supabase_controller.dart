@@ -41,4 +41,10 @@ class MockSupabaseController extends SupabaseController {
     // TODO: implement getAppInfo
     throw UnimplementedError();
   }
+  
+  @override
+  Future<List<UserIpray>> getTopUsersMorePray() {
+    // TODO: implement getUsersMorePray
+    throw UnimplementedError();
+  }
 }

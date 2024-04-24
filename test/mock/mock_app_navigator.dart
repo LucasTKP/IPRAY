@@ -6,10 +6,6 @@ class MockAppNavigator extends AppNavigator{
   Function() onNavigatePop = () => throw UnimplementedError();
 
   @override
-  navigateToHome() => onNavigateToHome();
-  Function() onNavigateToHome = () => throw UnimplementedError();
-
-  @override
   navigateToSignin() => onNavigateToSignin();
   Function() onNavigateToSignin = () => throw UnimplementedError();
 
@@ -17,8 +13,12 @@ class MockAppNavigator extends AppNavigator{
   navigateToSignup() => onNavigateToSignup();
   Function() onNavigateToSignup = () => throw UnimplementedError();
 
+    @override
+  navigateToRoutes() => onNavigateToRoutes();
+  Function() onNavigateToRoutes = () => throw UnimplementedError();
   @override
   showError(String error) => onShowError(error);
   Function(String error) onShowError = (error) => throw UnimplementedError();
+
   
 }

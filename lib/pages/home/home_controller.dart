@@ -1,4 +1,4 @@
-import 'package:ipray/controllers/variables_bibleVerse.dart';
+import 'package:ipray/controllers/variables_bible_phrases.dart';
 
 import '../../controllers/date_time_controller.dart';
 

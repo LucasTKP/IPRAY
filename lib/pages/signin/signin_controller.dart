@@ -14,11 +14,7 @@ class SignInController extends ChangeNotifier {
   final GoogleController googleController;
   final FirebaseController firebaseController;
 
-  SignInController(
-      {required this.userController,
-      required this.appNavigator,
-      required this.googleController,
-      required this.firebaseController});
+  SignInController({required this.userController, required this.appNavigator, required this.googleController, required this.firebaseController});
 
   bool isLoading = false;
 
@@ -55,7 +51,7 @@ class SignInController extends ChangeNotifier {
     setIsLoading(false);
     if (user != null) {
       userController.setUser(user);
-      appNavigator.navigateToHome();
+      appNavigator.navigateToRoutes();
     } else {
       appNavigator.navigateToSignup();
     }

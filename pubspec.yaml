@@ -24,6 +24,8 @@ dependencies:
   mocktail: ^1.0.3
   flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.2.6
+  firebase_messaging: ^14.9.1
+  flutter_local_notifications: ^17.1.0
 
 
 dev_dependencies:
@@ -47,6 +49,7 @@ flutter:
     - assets/icons/google.svg
     - assets/icons/time.svg
     - assets/icons/city.svg
+    - assets/icons/podium.svg
 
     - assets/lotties/lottieSplashPage.json
 
