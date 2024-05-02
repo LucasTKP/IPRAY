@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipray/controllers/variables_bible_phrases.dart';
+import 'package:ipray/variables/variables_bible_phrases.dart';
 import 'package:ipray/pages/home/home_controller.dart';
 import '../../mock/mock_date_time_controller.dart';
 

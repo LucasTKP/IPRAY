@@ -3,7 +3,6 @@ import 'package:ipray/controllers/pray_controller.dart';
 
 import 'package:ipray/models/praies_models.dart';
 
-
 import '../mock/mock_app_navigator.dart';
 import '../mock/mock_supabase_controller.dart';
 
@@ -41,13 +40,11 @@ void main() {
 
     Praies pray = Praies(id: 0, idUser: 0, date: date);
 
-
     bool onCreatePrayCalled = false;
     supabaseController.onCreatePray = (DateTime dateSelected, int idUser) async {
       onCreatePrayCalled = true;
       return pray;
     };
-
 
     // Act
     final response = await controller.createPray(date, 0);
@@ -83,7 +80,7 @@ void main() {
     };
 
     bool onShowError = false;
-    appNavigator.onShowError = (String error){
+    appNavigator.onShowError = (String error) {
       onShowError = true;
     };
 
@@ -154,11 +151,11 @@ void main() {
     bool onDeletePrayCalled = false;
     supabaseController.onDeletePray = (DateTime dateSelected, int idUser) async {
       onDeletePrayCalled = true;
-     throw Error;
+      throw Error;
     };
 
     bool onShowError = false;
-    appNavigator.onShowError = (String error){
+    appNavigator.onShowError = (String error) {
       onShowError = true;
     };
 
@@ -203,7 +200,6 @@ void main() {
       ];
       return data;
     };
-
 
     // Act
     final response = await controller.existsPray(date, 0);

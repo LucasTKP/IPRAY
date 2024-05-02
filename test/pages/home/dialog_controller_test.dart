@@ -38,7 +38,7 @@ void main() {
     });
 
     bool onProcessResponseDialogSelectDayCalled = false;
-    calendarController.onProcessResponseDialogSelectDay = (DateTime dateSelected, bool? response){
+    calendarController.onProcessResponseDialogSelectDay = (DateTime dateSelected, bool? response) async{
       onProcessResponseDialogSelectDayCalled = true;
     };
 
@@ -67,7 +67,7 @@ void main() {
     });
 
     bool onProcessResponseDialogSelectDayCalled = false;
-    calendarController.onProcessResponseDialogSelectDay = (DateTime dateSelected, bool? response){
+    calendarController.onProcessResponseDialogSelectDay = (DateTime dateSelected, bool? response) async{
       onProcessResponseDialogSelectDayCalled = true;
     };
 
@@ -77,7 +77,7 @@ void main() {
     };
 
     // Act
-    controller.handleClickButtonSave();
+     controller.handleClickButtonSave();
 
     // Assert
     expect(notifyListenerCalled, false);

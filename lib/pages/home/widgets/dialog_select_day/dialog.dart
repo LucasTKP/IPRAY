@@ -18,7 +18,7 @@ class DialogSelectDay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              daySelected.formatDate(),
+              daySelected.formatDateDescriptive(),
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
             ),
@@ -136,7 +136,7 @@ class DialogSelectDay extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             ElevatedButton(
-              onPressed: () => dialogSelectDayController.handleClickButtonSave(),
+              onPressed: () async => await dialogSelectDayController.handleClickButtonSave(),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
                   const Color(0XFFBF9000),

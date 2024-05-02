@@ -11,10 +11,10 @@ abstract class AppNavigator {
   showError(String errorMessage);
 }
 
-class AppNavigatorImpl extends AppNavigator {
+class AppNavigatorImp extends AppNavigator {
   final BuildContext context;
 
-  AppNavigatorImpl({required this.context});
+  AppNavigatorImp({required this.context});
   @override
   navigateToSignin() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInPresenter()));

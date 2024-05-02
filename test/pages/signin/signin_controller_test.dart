@@ -6,6 +6,7 @@ import 'package:ipray/pages/signin/signin_controller.dart';
 import '../../mock/mock_app_navigator.dart';
 import '../../mock/mock_firebase_controller.dart';
 import '../../mock/mock_google_controller.dart';
+import '../../mock/mock_supabase_controller.dart';
 import '../../mock/mock_user_controller.dart';
 
 void main() {
@@ -14,18 +15,21 @@ void main() {
   late MockUserController userController;
   late MockFirebaseController firebaseController;
   late MockGoogleController googleController;
+  late MockSupabaseController supabaseController;
 
   setUp(() {
     appNavigator = MockAppNavigator();
     userController = MockUserController();
     firebaseController = MockFirebaseController();
     googleController = MockGoogleController();
+    supabaseController = MockSupabaseController();
 
     controller = SignInController(
       userController: userController,
       appNavigator: appNavigator,
       firebaseController: firebaseController,
       googleController: googleController,
+      supabaseController: supabaseController,
     );
   });
 
@@ -39,7 +43,7 @@ void main() {
     });
 
     bool onSingInCalled = false;
-    googleController.onSignIn = () async{
+    googleController.onSignIn = () async {
       OAuthCredential oAuthCredential = const OAuthCredential(providerId: '', signInMethod: '');
       onSingInCalled = true;
       return oAuthCredential;
@@ -51,17 +55,7 @@ void main() {
       return null;
     };
 
-    userController.onGetUser = (String email) async => UserIpray(
-        id: 0,
-        name: "teste",
-        email: "teste@gmail.com",
-        urlImage: "",
-        age: 20,
-        state: "São Paulo",
-        city: "Franca",
-        total: 0,
-        streak: 0,
-        createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0));
+    supabaseController.onGetUser = (String email) async => UserIpray(id: 0, name: "teste", email: "teste@gmail.com", urlImage: "", age: 20, state: "São Paulo", city: "Franca", total: 0, streak: 0, createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0), dateLastPray: DateTime.now());
 
     userController.onSetUser = (UserIpray userIpray) => {};
 
@@ -112,17 +106,19 @@ void main() {
 
     controller.isLoading = true;
 
-    userController.onGetUser = (String email) async => UserIpray(
-        id: 0,
-        name: "teste",
-        email: "teste@gmail.com",
-        urlImage: "",
-        age: 20,
-        state: "São Paulo",
-        city: "Franca",
-        total: 0,
-        streak: 0,
-        createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0));
+    supabaseController.onGetUser = (String email) async => UserIpray(
+          id: 0,
+          name: "teste",
+          email: "teste@gmail.com",
+          urlImage: "",
+          age: 20,
+          state: "São Paulo",
+          city: "Franca",
+          total: 0,
+          streak: 0,
+          createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+          dateLastPray: DateTime.now(),
+        );
 
     bool setUser = false;
     userController.onSetUser = (UserIpray userIpray) => {setUser = true};
@@ -144,7 +140,7 @@ void main() {
     // Arrange
     controller.isLoading = true;
 
-    userController.onGetUser = (String email) async => null;
+    supabaseController.onGetUser = (String email) async => null;
 
     bool navigateToSignupCalled = false;
     appNavigator.onNavigateToSignup = () => navigateToSignupCalled = true;
@@ -157,4 +153,3 @@ void main() {
     expect(navigateToSignupCalled, true);
   });
 }
-

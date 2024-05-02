@@ -9,9 +9,7 @@ abstract class SupabaseController {
 
   Future<UserIpray?> getUser(String email);
 
-  Future<UserIpray> incrementUserTotal(UserIpray user);
-
-  Future<UserIpray> decrementUserTotal(UserIpray user);
+  Future<UserIpray?> updateUser(Map<String, String> user, int idUser);
 
   Future<Praies> createPray(DateTime dateSelected, int idUser);
 
@@ -22,6 +20,7 @@ abstract class SupabaseController {
   Future<AppInfo> getAppInfo();
 
   Future<List<UserIpray>> getTopUsersMorePray();
+  Future<List<UserIpray>> getTopUsersConsecultiveDays();
 }
 
 class SupabaseControllerImp extends SupabaseController {
@@ -46,16 +45,9 @@ class SupabaseControllerImp extends SupabaseController {
   }
 
   @override
-  Future<UserIpray> incrementUserTotal(UserIpray user) async {
-    final response = await supabase.from('User').update({'total': user.total + 1}).match({'id': user.id}).select();
-    final UserIpray newUser = UserIpray.fromJson(response[0]);
-    return newUser;
-  }
-
-  @override
-  Future<UserIpray> decrementUserTotal(UserIpray user) async {
-    final response = await supabase.from('User').update({'total': user.total - 1}).match({'id': user.id}).select();
-    final UserIpray newUser = UserIpray.fromJson(response[0]);
+  Future<UserIpray> updateUser(Map<String, String> user, int idUser) async {
+    final response = await supabase.from('User').update(user).match({'id': idUser}).select();
+    UserIpray newUser = UserIpray.fromJson(response[0]);
     return newUser;
   }
 
@@ -82,7 +74,7 @@ class SupabaseControllerImp extends SupabaseController {
 
   @override
   Future<AppInfo> getAppInfo() async {
-    final response = await supabase.from('App').select().order('created_at', ascending: false).limit(1).single();
+    final response = await supabase.from('App').select().limit(1).single();
     AppInfo appInfo = AppInfo.fromJson(response);
     return appInfo;
   }
@@ -101,58 +93,19 @@ class SupabaseControllerImp extends SupabaseController {
 
     return users;
   }
-}
 
-// class SupabaseControllerFake extends SupabaseController {
-//   Map<int, UserIpray> users = {};
-//
-//   @override
-//   Future<UserIpray> createUser(Map<String, dynamic> dataUser) async {
-//     dataUser['id'] = DateTime.now().millisecondsSinceEpoch;
-//     UserIpray user = UserIpray.fromJson(dataUser);
-//     users[user.id] = user;
-//     return user;
-//   }
-//
-//   @override
-//   Future<UserIpray?> getUser(String email) async {
-//     final UserIpray? user = users.values.firstWhereOrNull((element) => element.email == email);
-//     return user;
-//   }
-//
-//   @override
-//   Future<UserIpray> incrementUserTotal(UserIpray user) async {
-//     final UserIpray newUser = UserIpray(
-//       id: user.id,
-//       name: user.name,
-//       email: user.email,
-//       total: user.total + 1,
-//       urlImage: user.urlImage,
-//       age: user.age,
-//       state: user.state,
-//       city: user.city,
-//       streak: user.streak,
-//       createdDate: user.createdDate,
-//     );
-//     users[newUser.id] = newUser;
-//     return newUser;
-//   }
-//
-//   @override
-//   Future<UserIpray> decrementUserTotal(UserIpray user) async {
-//     final UserIpray newUser = UserIpray(
-//       id: user.id,
-//       name: user.name,
-//       email: user.email,
-//       total: user.total - 1,
-//       urlImage: user.urlImage,
-//       age: user.age,
-//       state: user.state,
-//       city: user.city,
-//       streak: user.streak,
-//       createdDate: user.createdDate,
-//     );
-//     users[newUser.id] = newUser;
-//     return newUser;
-//   }
-// }
+  @override
+  Future<List<UserIpray>> getTopUsersConsecultiveDays() async {
+    final response = await supabase.from('User').select().order('streak', ascending: false).limit(10);
+
+    List<UserIpray> listUserIPray(List<dynamic> usersSupabase) {
+      return usersSupabase.map((user) {
+        return UserIpray.fromJson(user);
+      }).toList();
+    }
+
+    List<UserIpray> users = listUserIPray(response);
+
+    return users;
+  }
+}

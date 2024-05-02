@@ -24,12 +24,17 @@ class TopBar extends StatelessWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [Text('🙏 ${userController.getPrayDays()}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)), const Text('Rezados', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))],
+                    children: [Text('🙏 ${userController.getPrayDays()}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)), const Text('Rezados', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700))],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [Text('😭${userController.getLostDays()}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)), const Text('Perdidos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))],
+                    children: [Text('🚀 ${userController.getConsecultiveDaysPray()}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)), const Text('Seguidos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700))],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [Text('😭${userController.getLostDays()}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)), const Text('Perdidos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700))],
                   )
                 ],
               ),

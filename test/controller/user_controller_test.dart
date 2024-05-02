@@ -25,28 +25,24 @@ void main() {
     dateTimeController = MockDateTimeController();
     firebaseController = MockFirebaseController();
 
-    controller = UserControllerImp(
-      appNavigator: appNavigator,
-      supabaseController: supabaseController,
-      prayController: prayController,
-      dateTimeController: dateTimeController,
-      firebaseController: firebaseController
-    );
+    controller = UserControllerImp(appNavigator: appNavigator, supabaseController: supabaseController, prayController: prayController, dateTimeController: dateTimeController, firebaseController: firebaseController);
 
     controller.user = UserIpray(
-        id: 0,
-        name: "teste",
-        email: "teste@gmail.com",
-        urlImage: "",
-        age: 20,
-        state: "São Paulo",
-        city: "Franca",
-        total: 2,
-        streak: 0,
-        createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0));
+      id: 0,
+      name: "teste",
+      email: "teste@gmail.com",
+      urlImage: "",
+      age: 20,
+      state: "São Paulo",
+      city: "Franca",
+      total: 2,
+      streak: 0,
+      createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
+    );
   });
 
-  test("UserController.createUser()", () async{
+  test("UserController.createUser()", () async {
     // Arrange
     bool notifyListenerCalled = false;
     controller.addListener(() {
@@ -54,7 +50,7 @@ void main() {
     });
 
     bool onCreateUserCalled = false;
-    supabaseController.onCreateUser = (Map<String, dynamic> dataUser) async{
+    supabaseController.onCreateUser = (Map<String, dynamic> dataUser) async {
       onCreateUserCalled = true;
       return controller.user!;
     };
@@ -68,19 +64,19 @@ void main() {
     expect(response, true);
   });
 
-  test("UserController.createUser(error)", () async{
+  test("UserController.createUser(error)", () async {
     // Arrange
     bool notifyListenerCalled = false;
     controller.addListener(() {
       notifyListenerCalled = true;
     });
 
-    supabaseController.onCreateUser = (Map<String, dynamic> dataUser) async{
+    supabaseController.onCreateUser = (Map<String, dynamic> dataUser) async {
       throw Error;
     };
 
     bool onNavigateShowErrorCalled = false;
-    appNavigator.onShowError = (String error){
+    appNavigator.onShowError = (String error) {
       onNavigateShowErrorCalled = true;
     };
 
@@ -93,70 +89,21 @@ void main() {
     expect(response, false);
   });
 
-  test("UserController.getUser()", () async{
+  test("UserController.verifyUser(error)", () async {
     // Arrange
     bool notifyListenerCalled = false;
     controller.addListener(() {
       notifyListenerCalled = true;
     });
 
-    bool onGetUserCalled = false;
-    supabaseController.onGetUser = (String email) async {
-      onGetUserCalled = true;
-      return controller.user;
-    };
-
-    // Act
-    UserIpray? response = await controller.getUser("");
-
-    // Assert
-    expect(notifyListenerCalled, false);
-    expect(onGetUserCalled, true);
-    expect(response, controller.user);
-  });
-
-  test("UserController.getUser(error)", () async{
-    // Arrange
-    bool notifyListenerCalled = false;
-    controller.addListener(() {
-      notifyListenerCalled = true;
-    });
-
-    supabaseController.onGetUser = (String email) async{
-      throw Error;
-    };
-
-    bool onNavigateShowErrorCalled = false;
-    appNavigator.onShowError = (String error){
-      onNavigateShowErrorCalled = true;
-    };
-
-
-    // Act
-    UserIpray? response = await controller.getUser("");
-
-    // Assert
-    expect(notifyListenerCalled, false);
-    expect(onNavigateShowErrorCalled, true);
-    expect(response, null);
-  });
-
-  test("UserController.verifyUser(error)", () async{
-    // Arrange
-    bool notifyListenerCalled = false;
-    controller.addListener(() {
-      notifyListenerCalled = true;
-    });
-
-    firebaseController.onGetCurrentUser = (){
+    firebaseController.onGetCurrentUser = () {
       return null;
     };
 
     bool onNavigateToSigninCalled = false;
-    appNavigator.onNavigateToSignin = (){
+    appNavigator.onNavigateToSignin = () {
       onNavigateToSigninCalled = true;
     };
-
 
     // Act
     await controller.verifyUser();
@@ -166,24 +113,24 @@ void main() {
     expect(onNavigateToSigninCalled, true);
   });
 
-  test("UserController.getLostDays()", (){
+  test("UserController.getLostDays()", () {
     // Arrange
     bool notifyListenerCalled = false;
     controller.addListener(() {
       notifyListenerCalled = true;
     });
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 20, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 20, 0, 0, 0, 0, 0);
 
     // Act
     int lostDays = controller.getLostDays();
 
     // Assert
-    expect(lostDays, 3);
+    expect(lostDays, 4);
     expect(notifyListenerCalled, false);
   });
 
-  test("UserController.getPrayDays()", (){
+  test("UserController.getPrayDays()", () {
     // Arrange
     bool notifyListenerCalled = false;
     controller.addListener(() {
@@ -221,21 +168,21 @@ void main() {
     DateTime date = DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     bool onExistsPrayInCacheCalled = false;
-    prayController.onExistsPrayInCache = (DateTime date){
+    prayController.onExistsPrayInCache = (DateTime date) {
       onExistsPrayInCacheCalled = true;
       return false;
     };
 
     bool onCreatePrayCalled = false;
-    prayController.onCreatePray = (DateTime date, int id) async{
+    prayController.onCreatePray = (DateTime date, int id) async {
       onCreatePrayCalled = true;
-      return Praies(id:0, idUser: 0, date: date);
+      return Praies(id: 0, idUser: 0, date: date);
     };
 
-    bool onIncrementUserTotalCalled = false;
-    supabaseController.onIncrementUserTotal = (UserIpray user) async{
-      onIncrementUserTotalCalled = true;
-      return controller.user!;
+    bool onGetUserCalled = false;
+    supabaseController.onGetUser = (String email) async {
+      onGetUserCalled = true;
+      return controller.user;
     };
 
     // Act
@@ -245,7 +192,7 @@ void main() {
     expect(notifyListenerCalled, true);
     expect(onExistsPrayInCacheCalled, true);
     expect(onCreatePrayCalled, true);
-    expect(onIncrementUserTotalCalled, true);
+    expect(onGetUserCalled, true);
   });
 
   test("UserController.addPray(error)", () async {
@@ -257,22 +204,16 @@ void main() {
 
     DateTime date = DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
-    prayController.onExistsPrayInCache = (DateTime date){
+    prayController.onExistsPrayInCache = (DateTime date) {
       return false;
     };
 
-    prayController.onCreatePray = (DateTime date, int id) async{
-      return Praies(id:0, idUser: 0, date: date);
-    };
-
-    supabaseController.onIncrementUserTotal = (UserIpray user){
-      throw Error;
+    prayController.onCreatePray = (DateTime date, int id) async {
+      return Praies(id: 0, idUser: 0, date: date);
     };
 
     bool onShowErrorCalled = false;
-    appNavigator.onShowError = (value) => {
-      onShowErrorCalled = true
-    };
+    appNavigator.onShowError = (value) => {onShowErrorCalled = true};
 
     // Act
     await controller.addPray(date);
@@ -291,27 +232,26 @@ void main() {
 
     DateTime date = DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
-    prayController.onExistsPrayInCache = (DateTime date){
+    prayController.onExistsPrayInCache = (DateTime date) {
       return true;
     };
 
-    prayController.onDeletePray = (DateTime date, int id) async{
+    prayController.onDeletePray = (DateTime date, int id) async {
       return true;
     };
 
-    bool onDecrementUserTotalCalled = false;
-    supabaseController.onDecrementUserTotal = (UserIpray user) async{
-      onDecrementUserTotalCalled = true;
-      return controller.user!;
+    bool onGetUserCalled = false;
+    supabaseController.onGetUser = (String email) async {
+      onGetUserCalled = true;
+      return controller.user;
     };
-
 
     // Act
     await controller.removePray(date);
 
     // Assert
     expect(notifyListenerCalled, true);
-    expect(onDecrementUserTotalCalled, true);
+    expect(onGetUserCalled, true);
   });
 
   test("UserController.removePray(error)", () async {
@@ -323,23 +263,16 @@ void main() {
 
     DateTime date = DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
-    prayController.onExistsPrayInCache = (DateTime date){
+    prayController.onExistsPrayInCache = (DateTime date) {
       return true;
     };
 
-    prayController.onDeletePray = (DateTime date, int id) async{
+    prayController.onDeletePray = (DateTime date, int id) async {
       return true;
-    };
-
-    supabaseController.onDecrementUserTotal = (UserIpray user){
-      throw Error;
     };
 
     bool onShowErrorCalled = false;
-    appNavigator.onShowError = (value) => {
-      onShowErrorCalled = true
-    };
-
+    appNavigator.onShowError = (value) => {onShowErrorCalled = true};
 
     // Act
     await controller.removePray(date);
@@ -349,6 +282,3 @@ void main() {
     expect(onShowErrorCalled, true);
   });
 }
-
-
-

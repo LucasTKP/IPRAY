@@ -24,13 +24,15 @@ void main() {
       showDialogSelectDay: (DateTime daySelected) {},
       prayController: prayController,
       appNavigator: appNavigator,
-      userController: userController, dateTimeController: dateTimeController,
+      userController: userController,
+      dateTimeController: dateTimeController,
     );
   });
 
-  test("CalendarController.onDaySelected(selectedDay.isBefore(userController.user!.createdDate))", () async{
+  test("CalendarController.onDaySelected()", () async {
     // Arrange
-    userController.user = UserIpray(id: 0,
+    userController.user = UserIpray(
+      id: 0,
       name: "teste",
       email: "teste@gmail.com",
       urlImage: "",
@@ -40,16 +42,45 @@ void main() {
       total: 0,
       streak: 0,
       createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
+    );
+
+    DateTime selectedDay = DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+
+    bool error = false;
+    appNavigator.onShowError = (value) => {error = true};
+
+    // Act
+    controller.onDaySelected(selectedDay);
+
+    // Assert
+    expect(error, false);
+  });
+
+  test("CalendarController.onDaySelected(error)", () async {
+    // Arrange
+    userController.user = UserIpray(
+      id: 0,
+      name: "teste",
+      email: "teste@gmail.com",
+      urlImage: "",
+      age: 20,
+      state: "São Paulo",
+      city: "Franca",
+      total: 0,
+      streak: 0,
+      createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
     );
 
     DateTime selectedDay = DateTime(2024, 4, 14, 0, 0, 0, 0, 0);
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     bool error = false;
-    appNavigator.onShowError = (value) => {
-      error = true
-    };
+    appNavigator.onShowError = (value) => {error = true};
 
     // Act
     controller.onDaySelected(selectedDay);
@@ -58,14 +89,10 @@ void main() {
     expect(error, true);
   });
 
-  test("CalendarController.onDaySelected(selectedDay.isAfter(dateNow))", () {
-    bool notifyListenerCalled = false;
-
-    controller.addListener(() {
-      notifyListenerCalled = true;
-    });
+  test("CalendarController.getDayIcon(🙏)", () async {
     // Arrange
-    userController.user = UserIpray(id: 0,
+    userController.user = UserIpray(
+      id: 0,
       name: "teste",
       email: "teste@gmail.com",
       urlImage: "",
@@ -74,39 +101,8 @@ void main() {
       city: "Franca",
       total: 0,
       streak: 0,
-      createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
-    );
-
-    DateTime selectedDay = DateTime(2024, 4, 20, 0, 0, 0, 0, 0);
-
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 19, 0, 0, 0, 0, 0);
-
-    bool error = false;
-    appNavigator.onShowError = (value) => {
-      error = true
-    };
-
-    // Act
-    controller.onDaySelected(selectedDay);
-
-    // Assert
-    expect(error, true);
-    expect(notifyListenerCalled, false);
-
-  });
-
-  test("CalendarController.getDayIcon(🙏)", () async{
-    // Arrange
-    userController.user = UserIpray(id: 0,
-        name: "teste",
-        email: "teste@gmail.com",
-        urlImage: "",
-        age: 20,
-        state: "São Paulo",
-        city: "Franca",
-        total: 0,
-        streak: 0,
-        createdDate: DateTime(2024, 4, 16, 0, 0, 0, 0, 0),
+      createdDate: DateTime(2024, 4, 16, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
     );
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
@@ -124,7 +120,7 @@ void main() {
     expect(icon, "🙏");
   });
 
-  test("CalendarController.getDayIcon(😭)", () async{
+  test("CalendarController.getDayIcon(😭)", () async {
     // Arrange
     bool notifyListenerCalled = false;
 
@@ -132,7 +128,8 @@ void main() {
       notifyListenerCalled = true;
     });
 
-    userController.user = UserIpray(id: 0,
+    userController.user = UserIpray(
+      id: 0,
       name: "teste",
       email: "teste@gmail.com",
       urlImage: "",
@@ -142,6 +139,7 @@ void main() {
       total: 0,
       streak: 0,
       createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
     );
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
@@ -160,9 +158,10 @@ void main() {
     expect(notifyListenerCalled, false);
   });
 
-  test("CalendarController.getDayIcon(dateNow.isAfter(day))", () async{
+  test("CalendarController.getDayIcon(dateNow.isAfter(day))", () async {
     // Arrange
-    userController.user = UserIpray(id: 0,
+    userController.user = UserIpray(
+      id: 0,
       name: "teste",
       email: "teste@gmail.com",
       urlImage: "",
@@ -172,6 +171,7 @@ void main() {
       total: 0,
       streak: 0,
       createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
     );
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
@@ -189,9 +189,10 @@ void main() {
     expect(icon, "");
   });
 
-  test("CalendarController.getDayIcon(userController.user!.createdDate.isBefore(day))", () async{
+  test("CalendarController.getDayIcon(userController.user!.createdDate.isBefore(day))", () async {
     // Arrange
-    userController.user = UserIpray(id: 0,
+    userController.user = UserIpray(
+      id: 0,
       name: "teste",
       email: "teste@gmail.com",
       urlImage: "",
@@ -201,6 +202,7 @@ void main() {
       total: 0,
       streak: 0,
       createdDate: DateTime(2024, 4, 15, 0, 0, 0, 0, 0),
+      dateLastPray: DateTime.now(),
     );
 
     DateTime selectedDay = DateTime(2024, 4, 14, 0, 0, 0, 0, 0);
@@ -256,5 +258,3 @@ void main() {
     expect(notifyListenerCalled, false);
   });
 }
-
-

@@ -4,6 +4,7 @@ import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/shared/app_navigator.dart';
 
 import '../../../../controllers/date_time_controller.dart';
+
 abstract class CalendarController extends ChangeNotifier {
   DateTime firstDay = DateTime.utc(2024, 1, 1);
   DateTime lastDay = DateTime.utc(2030, 3, 14);
@@ -12,9 +13,8 @@ abstract class CalendarController extends ChangeNotifier {
 
   Future<String> getDayIcon(DateTime day);
 
-  void processResponseDialogSelectDay(DateTime selectedDay, bool? response);
+  Future processResponseDialogSelectDay(DateTime selectedDay, bool? response);
 }
-
 
 class CalendarControllerImp extends CalendarController {
   final Function(DateTime daySelected) showDialogSelectDay;
@@ -43,10 +43,10 @@ class CalendarControllerImp extends CalendarController {
 
   @override
   onDaySelected(DateTime selectedDay) {
-    DateTime dateNow = dateTimeController.getNow();
+    DateTime dateWithZeroTime = dateTimeController.getNowZeroTime();
 
-    if (selectedDay.isBefore(userController.user!.createdDate) || selectedDay.isAfter(dateNow)) {
-      appNavigator.showError("Você só pode selecionar algum dia entre o seu cadastro e  o dia de hoje");
+    if (dateWithZeroTime.compareTo(selectedDay) != 0) {
+      appNavigator.showError("Você só pode registrar sua reza de hoje!");
       return;
     }
 
@@ -59,7 +59,7 @@ class CalendarControllerImp extends CalendarController {
 
     String response = "";
 
-    if (dateNow.isAfter(day) && userController.user!.createdDate.isBefore(day) || userController.user!.createdDate.isAtSameMomentAs(day)) {
+    if (dateNow.isAfter(day) && userController.user!.createdDate.isBefore(day) || userController.user!.createdDate.compareTo(day) == 0) {
       final result = await prayController.existsPray(day, userController.user!.id);
       response = result ? '🙏' : '😭';
     }
@@ -67,7 +67,7 @@ class CalendarControllerImp extends CalendarController {
   }
 
   @override
-  void processResponseDialogSelectDay(DateTime selectedDay, bool? response) async {
+  Future processResponseDialogSelectDay(DateTime selectedDay, bool? response) async {
     if (response == null) return;
 
     if (response == true) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/date_time_controller.dart';
 import 'package:ipray/controllers/firebase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
-import 'package:ipray/controllers/variables_address.dart';
+import 'package:ipray/variables/variables_address.dart';
 import 'package:ipray/shared/app_navigator.dart';
 
 class SignUpController extends ChangeNotifier {

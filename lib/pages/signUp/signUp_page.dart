@@ -14,61 +14,63 @@ class SignupPage extends StatelessWidget {
       canPop: false,
       child: SafeArea(
         child: Scaffold(
-          body: AnimatedBuilder(
-              animation: signUpController,
-              builder: (context, child) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFFFFDE78), // #FFDE78
-                        Color(0xFFFFFFFF), // #FFFFFF
+          body: SingleChildScrollView(
+            child: AnimatedBuilder(
+                animation: signUpController,
+                builder: (context, child) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFFFDE78), 
+                          Color(0xFFFFFFFF), 
+                        ],
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              const Row(
+                                children: [
+                                  Text(
+                                    'Perfil',
+                                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Icon(
+                                    Icons.data_usage_rounded,
+                                    size: 40,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TimeLine(controller: signUpController),
+                                  const SizedBox(width: 20),
+                                  FormsWidget(
+                                    signUpController: signUpController,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        LoadingSignUp(signUpController: signUpController),
                       ],
                     ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.05,
-                        ),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            const Row(
-                              children: [
-                                Text(
-                                  'Perfil',
-                                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                                ),
-                                SizedBox(width: 5),
-                                Icon(
-                                  Icons.data_usage_rounded,
-                                  size: 40,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TimeLine(controller: signUpController),
-                                const SizedBox(width: 20),
-                                FormsWidget(
-                                  signUpController: signUpController,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      LoadingSignUp(signUpController: signUpController),
-                    ],
-                  ),
-                );
-              }),
+                  );
+                }),
+          ),
         ),
       ),
     );

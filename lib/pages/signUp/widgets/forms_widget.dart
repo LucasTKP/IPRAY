@@ -24,31 +24,33 @@ class FormsWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                signUpController.step > 1
-                    ? InkWell(
-                        onTap: () => signUpController.setStepDecrement(),
-                        child: const Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back_rounded,
-                              color: Color(0xFF585858),
-                            ),
-                            Text(
-                              'Voltar',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFF585858),
-                              ),
-                            ),
-                          ],
+                if (signUpController.step > 1) ...{
+                  InkWell(
+                    onTap: () => signUpController.setStepDecrement(),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back_rounded,
+                          color: Color(0xFF585858),
                         ),
-                      )
-                    : Container(),
+                        Text(
+                          'Voltar',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFF585858),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                },
+                const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () {     if (signUpController.formKey.currentState!.validate()) {
-    signUpController.verificationStepSignUp();
-    }
-    },
+                  onPressed: () {
+                    if (signUpController.formKey.currentState!.validate()) {
+                      signUpController.verificationStepSignUp();
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

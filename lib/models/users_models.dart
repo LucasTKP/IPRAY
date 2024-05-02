@@ -1,16 +1,5 @@
 class UserIpray {
-  UserIpray({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.urlImage,
-    required this.age,
-    required this.state,
-    required this.city,
-    required this.total,
-    required this.streak,
-    required this.createdDate,
-  });
+  UserIpray({required this.id, required this.name, required this.email, required this.urlImage, required this.age, required this.state, required this.city, required this.total, required this.streak, required this.createdDate, this.deviceToken, required this.dateLastPray});
 
   final int id;
   final String name;
@@ -22,8 +11,10 @@ class UserIpray {
   final int total;
   final int streak;
   final DateTime createdDate;
+  final String? deviceToken;
+  final DateTime? dateLastPray;
 
-  UserIpray copyWith({int? id, String? name, String? email, String? urlImage, int? age, String? state, String? city, int? total, int? streak, DateTime? createdDate}) {
+  UserIpray copyWith({int? id, String? name, String? email, String? urlImage, int? age, String? state, String? city, int? total, int? streak, DateTime? createdDate, String? deviceToken, DateTime? dateLastPray}) {
     return UserIpray(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -35,6 +26,8 @@ class UserIpray {
       total: total ?? this.total,
       streak: streak ?? this.streak,
       createdDate: createdDate ?? this.createdDate,
+      deviceToken: deviceToken ?? this.deviceToken,
+      dateLastPray: dateLastPray ?? this.dateLastPray,
     );
   }
 
@@ -50,12 +43,16 @@ class UserIpray {
       total: json['total'] as int,
       streak: json['streak'] as int,
       createdDate: DateTime.parse(json['created_date'] as String),
+      deviceToken: json['device_token'] as String?,
+      dateLastPray: json['date_last_pray'] != null ? DateTime.parse(json['date_last_pray'] as String) : null,
     );
   }
 
+
+
   @override
   String toString() {
-    return 'UserIpray(id: $id, name: $name, email: $email, urlImage: $urlImage, age: $age, state: $state, city: $city, total: $total, streak: $streak, createdDate: $createdDate)';
+    return 'UserIpray(id: $id, name: $name, email: $email, urlImage: $urlImage, age: $age, state: $state, city: $city, total: $total, streak: $streak, createdDate: $createdDate, token: $deviceToken, dateLastPray: $dateLastPray)';
   }
 }
 

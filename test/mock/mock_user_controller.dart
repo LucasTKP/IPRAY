@@ -21,10 +21,6 @@ class MockUserController extends UserController {
   }
 
   @override
-  Future<UserIpray?> getUser(String email) => onGetUser(email);
-  Future<UserIpray?> Function(String email) onGetUser = (email) => throw UnimplementedError();
-
-  @override
   removePray(DateTime selectedDay) => onRemovePray(selectedDay);
   Function (DateTime selectedDay) onRemovePray = (selectedDay) => throw UnimplementedError();
 
@@ -35,4 +31,16 @@ class MockUserController extends UserController {
 
   @override
   verifyUser() {}
+  
+  @override
+  verifyToken(UserIpray userIpray) {
+    // TODO: implement verifyToken
+    throw UnimplementedError();
+  }
+  
+  @override
+  int getConsecultiveDaysPray() {
+    // TODO: implement getConsecultiveDaysPray
+    throw UnimplementedError();
+  }
 }

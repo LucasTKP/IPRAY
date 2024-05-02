@@ -20,19 +20,17 @@ class DialogSelectDayController extends ChangeNotifier {
 
   late bool praySelected;
 
-  handleClickButtonSave() {
+  Future handleClickButtonSave() async{
     if (praySelected) {
-      calendarController.processResponseDialogSelectDay(daySelected, true);
-      appNavigator.navigatePop();
+       calendarController.processResponseDialogSelectDay(daySelected, true);
     } else {
-      calendarController.processResponseDialogSelectDay(daySelected, false);
-      appNavigator.navigatePop();
+       calendarController.processResponseDialogSelectDay(daySelected, false);
     }
+    appNavigator.navigatePop();
   }
 
   setPraySelected(bool value) {
     praySelected = value;
     notifyListeners();
   }
-
 }

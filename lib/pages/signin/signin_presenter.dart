@@ -21,6 +21,7 @@ class _SignInPresenterState extends State<SignInPresenter> {
       appNavigator: Dependencies.instance.get(),
       googleController: Dependencies.instance.get(),
       firebaseController: Dependencies.instance.get(),
+      supabaseController: Dependencies.instance.get(),
     );
   }
 

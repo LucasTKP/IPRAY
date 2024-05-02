@@ -29,6 +29,7 @@ class PrayControllerImp extends PrayController {
   Future<Praies?> createPray(DateTime dateSelected, int idUser) async {
     try {
       Praies dataPray = await supabaseController.createPray(dateSelected, idUser);
+
       cache[dateSelected] = dataPray;
       return dataPray;
     } catch (e) {
@@ -46,8 +47,10 @@ class PrayControllerImp extends PrayController {
   @override
   Future<bool> deletePray(DateTime dateSelected, int idUser) async {
     try {
-      Praies dataPray = await supabaseController.deletePray(dateSelected, idUser);
-      cache[dataPray.date] = null;
+      await supabaseController.deletePray(dateSelected, idUser);
+
+      cache[dateSelected] = null;
+
       return true;
     } catch (e) {
       String error = 'Algo deu errado, tente novamente mais tarde.';
