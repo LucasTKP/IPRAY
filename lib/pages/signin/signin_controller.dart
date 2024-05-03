@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ipray/controllers/firebase_controller.dart';
+import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/models/users_models.dart';
 import 'package:ipray/shared/app_navigator.dart';
@@ -13,8 +16,9 @@ class SignInController extends ChangeNotifier {
   final AppNavigator appNavigator;
   final GoogleController googleController;
   final FirebaseController firebaseController;
+  final SupabaseController supabaseController;
 
-  SignInController({required this.userController, required this.appNavigator, required this.googleController, required this.firebaseController});
+  SignInController({required this.userController, required this.appNavigator, required this.googleController, required this.firebaseController, required this.supabaseController});
 
   bool isLoading = false;
 
@@ -47,13 +51,23 @@ class SignInController extends ChangeNotifier {
   }
 
   processSignInWithGoogle(String email) async {
-    final UserIpray? user = await userController.getUser(email);
-    setIsLoading(false);
-    if (user != null) {
-      userController.setUser(user);
-      appNavigator.navigateToRoutes();
-    } else {
-      appNavigator.navigateToSignup();
+    try {
+      final UserIpray? user = await supabaseController.getUser(email);
+      setIsLoading(false);
+      if (user != null) {
+        userController.setUser(user);
+        appNavigator.navigateToRoutes();
+      } else {
+        appNavigator.navigateToSignup();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      String error = 'Algo deu errado, tente novamente mais tarde.';
+      if (e is SocketException) {
+        error = 'Sem internet, por favor reconecte';
+      }
+      appNavigator.showError(error);
+      return null;
     }
   }
 }

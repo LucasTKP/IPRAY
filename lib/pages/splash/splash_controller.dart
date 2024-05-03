@@ -9,15 +9,14 @@ class SplashController extends ChangeNotifier {
   late SupabaseController supabaseController;
   late AppNavigator appNavigator;
 
-  SplashController({required this.supabaseController});
+  SplashController({required this.supabaseController, required this.appNavigator});
 
   bool differentVersionApp = false;
 
   Future<bool> verifyVersionApp() async {
     try {
       AppInfo appInfo = await supabaseController.getAppInfo();
-
-      if (appInfo.version != '1.0.0') {
+      if (appInfo.version != '1.0.2') {
         differentVersionApp = true;
         notifyListeners();
         return false;

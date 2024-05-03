@@ -21,8 +21,8 @@ class PhraseDaily extends StatelessWidget {
           decoration: BoxDecoration(
               color: const Color(0xFFEBE0BA),
               border: Border.all(
-                color: const Color(0xFFBF9000), // Cor da borda
-                width: 2, // Espessura da borda
+                color: const Color(0xFFBF9000),
+                width: 2,
               ),
               borderRadius: BorderRadius.circular(10)),
           child: Padding(

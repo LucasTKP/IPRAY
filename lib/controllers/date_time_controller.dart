@@ -1,10 +1,14 @@
+import 'package:ipray/utils/formatter_date.dart';
+
 abstract class DateTimeController {
-  DateTime getNow();
+  DateTime getNowZeroTime();
 }
 
-class DateTimeControllerImpl extends DateTimeController {
+class DateTimeControllerImp extends DateTimeController {
   @override
-  DateTime getNow() {
-    return DateTime.now();
+  DateTime getNowZeroTime() {
+    DateTime dateNow = DateTime.now();
+    dateNow = dateNow.formatDate();
+    return dateNow;
   }
 }

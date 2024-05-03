@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipray/controllers/variables_bible_phrases.dart';
+import 'package:ipray/variables/variables_bible_phrases.dart';
 import 'package:ipray/pages/home/home_controller.dart';
 import '../../mock/mock_date_time_controller.dart';
 
@@ -19,7 +19,7 @@ void main() {
 
   test('HomeController.getImagePath()', () {
     // Arrange
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     // Act
     String imagePath = controller.getImagePath();
@@ -30,7 +30,7 @@ void main() {
 
   test('HomeController.getPhrase', () {
     // Arrange
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     // Act
     String phrase = controller.getPhrase();

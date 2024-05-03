@@ -11,7 +11,7 @@ void main() {
     var date = DateTime(2024, 4, 16);
 
     // Act
-    var response = date.formatDate();
+    var response = date.formatDateDescriptive();
 
     // Assert
     expect(response, "16 de abril de 2024");

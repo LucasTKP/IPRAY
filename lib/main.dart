@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
+import 'package:ipray/controllers/notification_controller.dart';
 import 'package:ipray/pages/splash/splash_presenter.dart';
 import 'package:ipray/shared/dependencies.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,13 +9,21 @@ import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+
 void main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NotificationController.init();
+  await NotificationController.localNotiInit();
+  
 
   await Supabase.initialize(
     url: dotenv.env['URL_SUPABASE']!,
@@ -28,13 +38,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Ipray',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-        ),
-        home: const InjectionPage(child: SplashPresenter()));
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: TextScaler.noScaling,
+      ),
+      child: MaterialApp(
+          title: 'Ipray',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+          ),
+          home: const InjectionPage(child: SplashPresenter())),
+    );
   }
 }
 

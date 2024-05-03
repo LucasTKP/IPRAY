@@ -11,10 +11,10 @@ abstract class AppNavigator {
   showError(String errorMessage);
 }
 
-class AppNavigatorImpl extends AppNavigator {
+class AppNavigatorImp extends AppNavigator {
   final BuildContext context;
 
-  AppNavigatorImpl({required this.context});
+  AppNavigatorImp({required this.context});
   @override
   navigateToSignin() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInPresenter()));
@@ -40,7 +40,9 @@ class AppNavigatorImpl extends AppNavigator {
     final snackBar = SnackBar(
       content: Text(errorMessage),
       backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 1500),
     );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

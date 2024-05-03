@@ -12,17 +12,9 @@ class MockSupabaseController extends SupabaseController {
       (dataUser) => throw UnimplementedError();
 
   @override
-  Future<UserIpray> decrementUserTotal(UserIpray user) => onDecrementUserTotal(user);
-  Future<UserIpray> Function(UserIpray user) onDecrementUserTotal = (user) => throw UnimplementedError();
-
-  @override
   Future<UserIpray?> getUser(String email)=> onGetUser(email);
   Future<UserIpray?> Function(String email) onGetUser = (email) => throw UnimplementedError();
 
-
-  @override
-  Future<UserIpray> incrementUserTotal(UserIpray user)=> onIncrementUserTotal(user);
-  Future<UserIpray> Function(UserIpray user) onIncrementUserTotal = (user) => throw UnimplementedError();
 
   @override
   Future<Praies> createPray(DateTime dateSelected, int idUser) => onCreatePray(dateSelected, idUser);
@@ -47,4 +39,16 @@ class MockSupabaseController extends SupabaseController {
     // TODO: implement getUsersMorePray
     throw UnimplementedError();
   }
+  
+  @override
+  Future<UserIpray?> updateUser(Map<String, String> user, int idUser)=> onUpdateUser(user, idUser);
+  Future<UserIpray?> Function(Map<String, String> user, int idUser) onUpdateUser = (user, idUser) => throw UnimplementedError();
+  
+  @override
+  Future<List<UserIpray>> getTopUsersConsecultiveDays() {
+    // TODO: implement getTopUsersConsecultiveDays
+    throw UnimplementedError();
+  }
+  
+  
 }

@@ -19,8 +19,8 @@ class SignInPage extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFFFFDE78), // #FFDE78
-                  Color(0xFFFFFFFF), // #FFFFFF
+                  Color(0xFFFFDE78), 
+                  Color(0xFFFFFFFF),
                 ],
               ),
             ),
@@ -93,9 +93,11 @@ class SignInPage extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              const Text(
-                                'Entrar com o Google',
-                                style: TextStyle(fontSize: 22, color: Color(0xFFE5B500), fontWeight: FontWeight.w500),
+                              const Expanded(
+                                child: Text(
+                                  'Entrar com o Google',
+                                  style: TextStyle(fontSize: 20, color: Color(0xFFE5B500), fontWeight: FontWeight.w500),
+                                ),
                               )
                             ],
                           ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ipray/controllers/notification_controller.dart';
 import 'package:ipray/controllers/pray_controller.dart';
 import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/models/praies_models.dart';
@@ -15,13 +16,15 @@ abstract class UserController extends ChangeNotifier {
 
   Future<bool> createUser(Map<String, dynamic> dataUser);
 
-  Future<UserIpray?> getUser(String email);
-
   verifyUser();
+
+  verifyToken(UserIpray userIpray);
 
   int getLostDays();
 
   int getPrayDays();
+
+  int getConsecultiveDaysPray();
 
   setUser(UserIpray newUser);
 
@@ -63,10 +66,23 @@ class UserControllerImp extends UserController {
   }
 
   @override
-  Future<UserIpray?> getUser(String email) async {
+  verifyUser() async {
     try {
-      UserIpray? user = await supabaseController.getUser(email);
-      return user;
+      await Future.delayed(const Duration(seconds: 2));
+      User? userFirebase = firebaseController.getCurrentUser();
+      if (userFirebase != null) {
+        UserIpray? userIpray = await supabaseController.getUser(userFirebase.email!);
+        if (userIpray != null) {
+          await verifyToken(userIpray);
+          UserIpray userWithoutToken = userIpray.copyWith(deviceToken: null);
+          setUser(userWithoutToken);
+          appNavigator.navigateToRoutes();
+        } else {
+          appNavigator.navigateToSignup();
+        }
+      } else {
+        appNavigator.navigateToSignin();
+      }
     } catch (e) {
       debugPrint(e.toString());
       String error = 'Algo deu errado, tente novamente mais tarde.';
@@ -80,42 +96,24 @@ class UserControllerImp extends UserController {
   }
 
   @override
-  verifyUser() async {
-    await Future.delayed(const Duration(seconds: 2));
-    User? userFirebase = firebaseController.getCurrentUser();
-    if (userFirebase != null) {
-      UserIpray? userIpray = await getUser(userFirebase.email!);
-      if (userIpray != null) {
-        setUser(userIpray);
-        appNavigator.navigateToRoutes();
-      } else {
-        appNavigator.navigateToSignup();
-      }
-    } else {
-      appNavigator.navigateToSignin();
+  verifyToken(UserIpray userIpray) async {
+    String? token = await NotificationController.getTokenCell();
+    debugPrint(token.toString());
+    if (token != userIpray.deviceToken && token != null) {
+      await supabaseController.updateUser({"device_token": token}, userIpray.id);
     }
   }
 
   @override
   int getLostDays() {
-    DateTime dateNow = dateTimeController.getNow();
-    DateTime tomorrowStart = DateTime.utc(
-      dateNow.year,
-      dateNow.month,
-      dateNow.day + 1,
-      0,
-      0,
-      0,
-      0,
-      0,
-    );
+    DateTime dateNow = dateTimeController.getNowZeroTime();
     int lostDays = 0;
     UserIpray? user = this.user;
     if (user != null) {
       DateTime startDate = user.createdDate;
       int total = user.total;
-      int differenceInDays = tomorrowStart.difference(startDate).inDays;
-      lostDays = differenceInDays - total;
+      int differenceInDays = dateNow.difference(startDate).inDays;
+      lostDays = differenceInDays - (total -1);
     }
     return lostDays;
   }
@@ -123,6 +121,11 @@ class UserControllerImp extends UserController {
   @override
   int getPrayDays() {
     return user!.total;
+  }
+
+  @override
+  getConsecultiveDaysPray() {
+    return user!.streak;
   }
 
   @override
@@ -142,8 +145,11 @@ class UserControllerImp extends UserController {
       final response = await prayController.createPray(selectedDay, user.id);
       if (response is Praies) {
         try {
-          final UserIpray newUser = await supabaseController.incrementUserTotal(user);
-          setUser(newUser);
+          final response = await supabaseController.getUser(user.email);
+
+          if (response is UserIpray) {
+            setUser(response);
+          }
         } catch (e) {
           debugPrint(e.toString());
           String error = 'Algo deu errado, tente novamente mais tarde.';
@@ -168,8 +174,10 @@ class UserControllerImp extends UserController {
 
       if (response) {
         try {
-          final UserIpray newUser = await supabaseController.decrementUserTotal(user);
-          setUser(newUser);
+          final response = await supabaseController.getUser(user.email);
+          if (response is UserIpray) {
+            setUser(response);
+          }
         } catch (e) {
           debugPrint(e.toString());
           String error = 'Algo deu errado, tente novamente mais tarde.';

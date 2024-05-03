@@ -19,8 +19,7 @@ class Dependencies {
 
   bool contains<T>() => _objects.containsKey(T);
 
-  void add<T>(T instance) =>
-      contains<T>() ? throw Exception('Class ${T.runtimeType} already registered!') : _objects[T] = instance;
+  void add<T>(T instance) => contains<T>() ? throw Exception('Class ${T.runtimeType} already registered!') : _objects[T] = instance;
 
   T get<T>() => contains<T>() ? _objects[T] : throw Exception('Class ${T.runtimeType} not registered!');
 
@@ -29,14 +28,13 @@ class Dependencies {
   void clear() => _objects.clear();
 }
 
-void setupDependencies(BuildContext context) {
-  Dependencies.instance.add<DateTimeController>(DateTimeControllerImpl());
+Future<bool> setupDependencies(BuildContext context) async {
+  Dependencies.instance.add<DateTimeController>(DateTimeControllerImp());
   Dependencies.instance.add<FirebaseController>(FirebaseControllerImp());
-  Dependencies.instance.add<SupabaseController>(SupabaseControllerImp());
   Dependencies.instance.add<GoogleController>(GoogleControllerImp());
-  Dependencies.instance.add<AppNavigator>(AppNavigatorImpl(context: context));
+  Dependencies.instance.add<SupabaseController>(SupabaseControllerImp());
+  Dependencies.instance.add<AppNavigator>(AppNavigatorImp(context: context));
   Dependencies.instance.add<RoutesController>(RoutesControllerImp());
-  // Dependencies.instance.add<SupabaseController>(SupabaseControllerFake());
   Dependencies.instance.add<PrayController>(
     PrayControllerImp(
       appNavigator: Dependencies.instance.get(),
@@ -53,4 +51,5 @@ void setupDependencies(BuildContext context) {
       firebaseController: Dependencies.instance.get(),
     ),
   );
+  return true;
 }

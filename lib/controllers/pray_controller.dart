@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/shared/app_navigator.dart';
+import 'package:ipray/utils/formatter_date.dart';
 
 abstract class PrayController extends ChangeNotifier {
   final Map<DateTime, Praies?> cache = {};
@@ -29,6 +30,7 @@ class PrayControllerImp extends PrayController {
   Future<Praies?> createPray(DateTime dateSelected, int idUser) async {
     try {
       Praies dataPray = await supabaseController.createPray(dateSelected, idUser);
+
       cache[dateSelected] = dataPray;
       return dataPray;
     } catch (e) {
@@ -46,8 +48,10 @@ class PrayControllerImp extends PrayController {
   @override
   Future<bool> deletePray(DateTime dateSelected, int idUser) async {
     try {
-      Praies dataPray = await supabaseController.deletePray(dateSelected, idUser);
-      cache[dataPray.date] = null;
+      await supabaseController.deletePray(dateSelected, idUser);
+
+      cache[dateSelected] = null;
+
       return true;
     } catch (e) {
       String error = 'Algo deu errado, tente novamente mais tarde.';
@@ -61,6 +65,7 @@ class PrayControllerImp extends PrayController {
 
   @override
   Future<bool> existsPray(DateTime dateSelected, int idUser) async {
+    dateSelected = dateSelected.formatDate();
     if (cache.containsKey(dateSelected)) {
       return cache[dateSelected] != null;
     }
@@ -77,6 +82,7 @@ class PrayControllerImp extends PrayController {
 
   @override
   bool existsPrayInCache(DateTime dateSelected) {
+    dateSelected = dateSelected.formatDate();
     if (cache.containsKey(dateSelected)) {
       return cache[dateSelected] != null;
     }

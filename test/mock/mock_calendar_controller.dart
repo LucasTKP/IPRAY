@@ -12,8 +12,16 @@ class MockCalendarController extends CalendarController{
     // TODO: implement onDaySelected
     throw UnimplementedError();
   }
-
+  
   @override
-  void processResponseDialogSelectDay(DateTime selectedDay, bool? response) => onProcessResponseDialogSelectDay(selectedDay, response);
+  Future processResponseDialogSelectDay(DateTime selectedDay, bool? response) => onProcessResponseDialogSelectDay(selectedDay, response);
   Function(DateTime selectedDay, bool? response) onProcessResponseDialogSelectDay = (selectedDay, response) => throw UnimplementedError();
+  
+  @override
+  String textButtonRegisterPray() {
+    // TODO: implement textButtonRegisterPray
+    throw UnimplementedError();
+  }
+
+ 
 }

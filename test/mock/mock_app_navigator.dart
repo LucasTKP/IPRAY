@@ -1,6 +1,6 @@
 import 'package:ipray/shared/app_navigator.dart';
 
-class MockAppNavigator extends AppNavigator{
+class MockAppNavigator extends AppNavigator {
   @override
   navigatePop() => onNavigatePop();
   Function() onNavigatePop = () => throw UnimplementedError();
@@ -13,12 +13,11 @@ class MockAppNavigator extends AppNavigator{
   navigateToSignup() => onNavigateToSignup();
   Function() onNavigateToSignup = () => throw UnimplementedError();
 
-    @override
+  @override
   navigateToRoutes() => onNavigateToRoutes();
   Function() onNavigateToRoutes = () => throw UnimplementedError();
+
   @override
   showError(String error) => onShowError(error);
   Function(String error) onShowError = (error) => throw UnimplementedError();
-
-  
 }

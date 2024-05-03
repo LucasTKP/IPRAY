@@ -1,4 +1,4 @@
-import 'package:ipray/controllers/variables_bible_phrases.dart';
+import 'package:ipray/variables/variables_bible_phrases.dart';
 
 import '../../controllers/date_time_controller.dart';
 
@@ -9,7 +9,7 @@ class HomeController {
   HomeController({required this.variablesPhrases, required this.dateTimeController});
 
   String getImagePath() {
-    DateTime now = dateTimeController.getNow();
+    DateTime now = dateTimeController.getNowZeroTime();
     int dayOfWeek = now.weekday;
     String dayName = '';
 
@@ -43,7 +43,7 @@ class HomeController {
   }
 
   String getPhrase() {
-    DateTime now = dateTimeController.getNow();
+    DateTime now = dateTimeController.getNowZeroTime();
     int diaDoMes = now.day;
 
     return variablesPhrases.bibleVerses[diaDoMes].frase;

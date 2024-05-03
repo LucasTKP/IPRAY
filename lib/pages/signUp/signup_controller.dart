@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/date_time_controller.dart';
 import 'package:ipray/controllers/firebase_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
-import 'package:ipray/controllers/variables_address.dart';
+import 'package:ipray/variables/variables_address.dart';
 import 'package:ipray/shared/app_navigator.dart';
 
 class SignUpController extends ChangeNotifier {
@@ -85,8 +85,7 @@ class SignUpController extends ChangeNotifier {
   }
 
   signUp() async {
-    DateTime now = dateTimeController.getNow();
-    DateTime startOfDay = DateTime(now.year, now.month, now.day, 0, 0, 0, 0, 0);
+    DateTime dateNow = dateTimeController.getNowZeroTime();
 
     final dataUser = {
       'name': name.text,
@@ -97,7 +96,7 @@ class SignUpController extends ChangeNotifier {
       'url_image': '',
       'total': 0,
       'streak': 0,
-      'created_date': startOfDay.toIso8601String(),
+      'created_date': dateNow.toIso8601String(),
     };
     bool result = await userController.createUser(dataUser);
     if (result) {
