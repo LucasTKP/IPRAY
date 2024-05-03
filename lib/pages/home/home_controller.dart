@@ -9,7 +9,7 @@ class HomeController {
   HomeController({required this.variablesPhrases, required this.dateTimeController});
 
   String getImagePath() {
-    DateTime now = dateTimeController.getNow();
+    DateTime now = dateTimeController.getNowZeroTime();
     int dayOfWeek = now.weekday;
     String dayName = '';
 
@@ -43,7 +43,7 @@ class HomeController {
   }
 
   String getPhrase() {
-    DateTime now = dateTimeController.getNow();
+    DateTime now = dateTimeController.getNowZeroTime();
     int diaDoMes = now.day;
 
     return variablesPhrases.bibleVerses[diaDoMes].frase;

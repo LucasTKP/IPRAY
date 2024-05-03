@@ -48,7 +48,7 @@ void main() {
 
     firebaseController.onGetEmail = () => "teste@gmail.com";
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     Map<String, dynamic> createUserData = {};
     userController.onCreateUser = (dataUser) async {
@@ -87,7 +87,7 @@ void main() {
 
     firebaseController.onGetEmail = () => "teste@gmail.com";
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     userController.onCreateUser = (dataUser) async {
       return false;
@@ -134,7 +134,7 @@ void main() {
 
     firebaseController.onGetEmail = () => "teste@gmail.com";
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     Map<String, dynamic> createUserData = {};
     userController.onCreateUser = (dataUser) async {
@@ -162,7 +162,7 @@ void main() {
   //   final userControllerMock = UserControllerMock();
   //   final dateTimeControllerMock = DateTimeControllerMock();
   //
-  //   dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+  //   dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
   //   firebaseController.onGetEmail = () => "teste@gmail.com";
   //   appNavigator.onNavigateToHome = () => true;
   //

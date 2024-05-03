@@ -36,7 +36,8 @@ class _CalendarPresenterState extends State<CalendarPresenter> {
             getDayIcon: calendarController.getDayIcon,
             firstDay: calendarController.firstDay,
             lastDay: calendarController.lastDay,
-            dateNow: Dependencies.instance.get<DateTimeController>().getNow(),
+            dateNow: Dependencies.instance.get<DateTimeController>().getNowZeroTime(),
+            textButtonRegisterPray: calendarController.textButtonRegisterPray,
           )),
     );
   }

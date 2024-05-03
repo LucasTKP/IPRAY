@@ -16,7 +16,7 @@ class SplashController extends ChangeNotifier {
   Future<bool> verifyVersionApp() async {
     try {
       AppInfo appInfo = await supabaseController.getAppInfo();
-      if (appInfo.version != '1.0.1') {
+      if (appInfo.version != '1.0.2') {
         differentVersionApp = true;
         notifyListeners();
         return false;

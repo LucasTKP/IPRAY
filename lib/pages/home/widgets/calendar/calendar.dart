@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipray/utils/formatter_date.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatelessWidget {
@@ -7,6 +8,7 @@ class Calendar extends StatelessWidget {
   final DateTime dateNow;
   final Function(DateTime selectedDay) onDaySelected;
   final Future<String> Function(DateTime day) getDayIcon;
+  final String Function() textButtonRegisterPray;
   const Calendar({
     super.key,
     required this.onDaySelected,
@@ -14,13 +16,32 @@ class Calendar extends StatelessWidget {
     required this.firstDay,
     required this.lastDay,
     required this.dateNow,
+    required this.textButtonRegisterPray,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            onPressed: () => onDaySelected(dateNow),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 255, 226, 163),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: const BorderSide(color: Color(0XFFBF9000)),
+              ),
+            ),
+            child: Text(
+              textButtonRegisterPray(),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -71,14 +92,14 @@ class Calendar extends StatelessWidget {
             ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (_, day, __) => FutureBuilder(
-                future: getDayIcon(day),
+                future: getDayIcon(day.formatDate()),
                 builder: (context, snapshot) => Text(
                   snapshot.data ?? '',
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
             ),
-            onDaySelected: (selectedDay, focusedDay) => onDaySelected(selectedDay),
+            onDaySelected: (selectedDay, focusedDay) => onDaySelected(selectedDay.formatDate()),
           ),
         )
       ],

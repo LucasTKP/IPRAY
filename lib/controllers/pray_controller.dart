@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/supabase_controller.dart';
 import 'package:ipray/models/praies_models.dart';
 import 'package:ipray/shared/app_navigator.dart';
+import 'package:ipray/utils/formatter_date.dart';
 
 abstract class PrayController extends ChangeNotifier {
   final Map<DateTime, Praies?> cache = {};
@@ -64,6 +65,7 @@ class PrayControllerImp extends PrayController {
 
   @override
   Future<bool> existsPray(DateTime dateSelected, int idUser) async {
+    dateSelected = dateSelected.formatDate();
     if (cache.containsKey(dateSelected)) {
       return cache[dateSelected] != null;
     }
@@ -80,6 +82,7 @@ class PrayControllerImp extends PrayController {
 
   @override
   bool existsPrayInCache(DateTime dateSelected) {
+    dateSelected = dateSelected.formatDate();
     if (cache.containsKey(dateSelected)) {
       return cache[dateSelected] != null;
     }

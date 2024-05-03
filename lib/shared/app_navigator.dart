@@ -40,7 +40,9 @@ class AppNavigatorImp extends AppNavigator {
     final snackBar = SnackBar(
       content: Text(errorMessage),
       backgroundColor: Colors.red,
+      duration: const Duration(milliseconds: 1500),
     );
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

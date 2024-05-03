@@ -107,7 +107,7 @@ void main() {
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
 
     prayController.onExistsPray = (selectedDay, id) async {
       return true;
@@ -144,7 +144,7 @@ void main() {
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 18, 0, 0, 0, 0, 0);
 
     prayController.onExistsPray = (selectedDay, id) async {
       return false;
@@ -176,7 +176,7 @@ void main() {
 
     DateTime selectedDay = DateTime(2024, 4, 16, 0, 0, 0, 0, 0);
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     prayController.onExistsPray = (selectedDay, id) async {
       return false;
@@ -207,7 +207,7 @@ void main() {
 
     DateTime selectedDay = DateTime(2024, 4, 14, 0, 0, 0, 0, 0);
 
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     prayController.onExistsPray = (selectedDay, id) async {
       return false;

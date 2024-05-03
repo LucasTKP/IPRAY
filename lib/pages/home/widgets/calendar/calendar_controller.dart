@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ipray/controllers/pray_controller.dart';
 import 'package:ipray/controllers/user_controller.dart';
 import 'package:ipray/shared/app_navigator.dart';
+import 'package:ipray/utils/formatter_date.dart';
 
 import '../../../../controllers/date_time_controller.dart';
 
@@ -14,6 +15,8 @@ abstract class CalendarController extends ChangeNotifier {
   Future<String> getDayIcon(DateTime day);
 
   Future processResponseDialogSelectDay(DateTime selectedDay, bool? response);
+
+  String textButtonRegisterPray();
 }
 
 class CalendarControllerImp extends CalendarController {
@@ -43,9 +46,9 @@ class CalendarControllerImp extends CalendarController {
 
   @override
   onDaySelected(DateTime selectedDay) {
-    DateTime dateWithZeroTime = dateTimeController.getNowZeroTime();
+    DateTime dateNow = dateTimeController.getNowZeroTime();
 
-    if (dateWithZeroTime.compareTo(selectedDay) != 0) {
+    if (dateNow.compareTo(selectedDay.formatDate()) != 0) {
       appNavigator.showError("Você só pode registrar sua reza de hoje!");
       return;
     }
@@ -55,13 +58,16 @@ class CalendarControllerImp extends CalendarController {
 
   @override
   Future<String> getDayIcon(DateTime day) async {
-    DateTime dateNow = dateTimeController.getNow();
-
+    DateTime dateNow = dateTimeController.getNowZeroTime();
+    DateTime userCreatedDate = userController.user!.createdDate.formatDate();
+    DateTime newDay = day.formatDate();
     String response = "";
 
-    if (dateNow.isAfter(day) && userController.user!.createdDate.isBefore(day) || userController.user!.createdDate.compareTo(day) == 0) {
-      final result = await prayController.existsPray(day, userController.user!.id);
-      response = result ? '🙏' : '😭';
+    if (userCreatedDate.isBefore(newDay) || userCreatedDate.isAtSameMomentAs(newDay)) {
+      if (dateNow.isAfter(newDay) || dateNow.isAtSameMomentAs(newDay)) {
+        final result = await prayController.existsPray(newDay, userController.user!.id);
+        response = result ? '🙏' : '😭';
+      }
     }
     return response;
   }
@@ -75,5 +81,12 @@ class CalendarControllerImp extends CalendarController {
     } else {
       userController.removePray(selectedDay);
     }
+  }
+
+  @override
+  String textButtonRegisterPray() {
+    DateTime date= dateTimeController.getNowZeroTime();
+    if (prayController.existsPrayInCache(date)) return 'Excluir Reza de hoje';
+    return "Cadastrar Reza de hoje";
   }
 }

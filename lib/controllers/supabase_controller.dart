@@ -105,7 +105,6 @@ class SupabaseControllerImp extends SupabaseController {
     }
 
     List<UserIpray> users = listUserIPray(response);
-
     return users;
   }
 }

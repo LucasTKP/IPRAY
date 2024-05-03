@@ -19,7 +19,7 @@ void main() {
 
   test('HomeController.getImagePath()', () {
     // Arrange
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     // Act
     String imagePath = controller.getImagePath();
@@ -30,7 +30,7 @@ void main() {
 
   test('HomeController.getPhrase', () {
     // Arrange
-    dateTimeController.onGetNow = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
+    dateTimeController.onGetNowZeroTime = () => DateTime(2024, 4, 15, 0, 0, 0, 0, 0);
 
     // Act
     String phrase = controller.getPhrase();

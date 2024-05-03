@@ -50,7 +50,7 @@ class TableRankControllerImp extends TableRankController {
   getTop10ConsecutiveDays() async {
     try {
       setIsLoading(true);
-      List<UserIpray> users = await supabaseController.getTopUsersMorePray();
+      List<UserIpray> users = await supabaseController.getTopUsersConsecultiveDays();
       usersTopConsecultiveDays = users;
       notifyListeners();
     } catch (e) {
