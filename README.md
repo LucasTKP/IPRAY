@@ -1,7 +1,7 @@
 <h1 align="center">IPRAY</h1>
 <div>
-Repositório de um projeto que criei do dia 10 de março ao dia 2 de maio de 2024.
-O aplicativo consiste em um registrador de rezas, onde o usuário entra todo dia e registra se rezou ou não, com isso ele pode  subir ou descer no ranking.
+Repositório de um projeto que desenvolvi durante o mês de março e abril de 2024.
+O aplicativo consiste em um registrador de rezas, onde o usuário entra todo dia e registra se rezou ou não, com isso ele pode subir ou descer no ranking.
 Eu mesmo tive a ideia deste aplicativo e desenvolvi o design, fluxos de telas, front-end, modelagem do banco de dados e back-end.
 </div>  
 
@@ -59,7 +59,7 @@ Eu mesmo tive a ideia deste aplicativo e desenvolvi o design, fluxos de telas, f
 </div>
 
 <div align="left"> 
-   <strong>01. Utilizei a arquitetura MVP:</strong> Para deixar o projeto mais organizado e de melhor visualização, utilizei models, views e presenter (unir view e controller) para estruturar o projeto.
+   <strong>01. Utilizei a arquitetura MVP:</strong> Para deixar o projeto mais organizado e de melhor visualização, utilizei models, views e presenter(unir view e controller) para estruturar o projeto.
 </div>
 
 <div align="left"> 
@@ -67,7 +67,7 @@ Eu mesmo tive a ideia deste aplicativo e desenvolvi o design, fluxos de telas, f
 </div>
 
 <div align="left"> 
-   <strong>03. Utilizei o auth do Firebase integrado com o Google:</strong> Visando facilitar o login do usuário utilizei o login com o Google.
+   <strong>03. Utilizei o auth do Firebase integrado com o Google:</strong> Visando facilitar o login do usuário, disponibilizei o login com o Google.
 </div>
 
 <div align="left"> 
@@ -86,11 +86,18 @@ Eu mesmo tive a ideia deste aplicativo e desenvolvi o design, fluxos de telas, f
    <strong>07. Cobri o aplicativo com testes unitários:</strong> Para facilitar a manutenção do aplicativo, cobri ele com testes unitários utilizando mocks manuais e quando necessário, o mocktail.
 </div>
 
+<div align="left"> 
+   <strong>08. Validei as entradas dos inputs:</strong> Visando um sistema consistente, validei as entradas dos inputs e exibi os erros para o usuário.
+</div>
+
 <br />
 
 <div align="center">
 
 
-https://github.com/LucasTKP/TheMovieApp/assets/101598532/080add33-b6a7-4e88-974a-8ab7dd093387
+
+https://github.com/LucasTKP/ipray/assets/101598532/9e101054-9fe4-4245-879f-963f33746c9d
+
+
 
 </div>
