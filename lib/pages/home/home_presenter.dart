@@ -16,8 +16,6 @@ class _HomePresenterState extends State<HomePresenter> {
   late HomeController homeController;
   late VariablesPhrases variablesPhrases;
 
-
-
   @override
   void initState() {
     super.initState();

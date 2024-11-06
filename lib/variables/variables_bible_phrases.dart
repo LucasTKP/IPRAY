@@ -212,5 +212,11 @@ class VariablesPhrases {
       capitulo: 23,
       versiculo: 1,
     ),
+    BibleVerse(
+      livro: "Salmos",
+      frase: "O Senhor é o meu pastor, nada me faltará.",
+      capitulo: 23,
+      versiculo: 1,
+    )
   ];
 }
